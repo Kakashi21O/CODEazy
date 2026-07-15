@@ -1,0 +1,293 @@
+/* public/css/notes.css */
+
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.notes-page {
+  min-height: 100vh;
+  padding-top: 90px;
+  background: #1d1f20;
+}
+
+.notes-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+.notes-page-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #00bfff;
+  margin-bottom: 10px;
+}
+
+.notes-heading {
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.notes-sub {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+/* ── Course grid ─────────────────────────────────────────────────────────── */
+#course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  animation: fadeUp 0.4s ease both;
+}
+
+.course-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.28s;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--course-color, #00bfff);
+  opacity: 0.7;
+  transition: opacity 0.28s;
+}
+
+.course-card:hover {
+  border-color: rgba(0, 191, 255, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.course-card:hover::before { opacity: 1; }
+
+.course-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.course-title {
+  font-size: 19px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.course-desc {
+  font-size: 13.5px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.course-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.course-level {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 191, 255, 0.1);
+  color: #00bfff;
+  letter-spacing: 0.3px;
+}
+
+.course-count {
+  font-size: 12.5px;
+  color: #555;
+}
+
+/* ── Subject list ────────────────────────────────────────────────────────── */
+#subject-view { display: none; animation: fadeUp 0.35s ease both; }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 8px 20px;
+  color: #aaa;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 32px;
+}
+.back-btn:hover { color: white; background: rgba(255,255,255,.1); }
+
+.subject-course-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.subject-course-desc {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.subject-list { display: flex; flex-direction: column; gap: 12px; }
+
+.subject-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 18px 22px;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+
+.subject-item:hover {
+  border-color: rgba(0, 191, 255, 0.3);
+  background: rgba(0, 191, 255, 0.04);
+  transform: translateX(4px);
+}
+
+.subject-item.completed {
+  border-color: rgba(91, 220, 174, 0.3);
+  background: rgba(91, 220, 174, 0.04);
+}
+
+.subject-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #444;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.22s;
+  font-size: 12px;
+}
+
+.subject-item.completed .subject-check {
+  background: #5bdcae;
+  border-color: #5bdcae;
+  color: #111;
+}
+
+.subject-info { flex: 1; }
+.subject-name { font-size: 16px; font-weight: 500; color: white; margin-bottom: 3px; }
+.subject-duration { font-size: 12.5px; color: #555; }
+
+.subject-arrow { color: #444; font-size: 18px; transition: color 0.2s; }
+.subject-item:hover .subject-arrow { color: #00bfff; }
+
+/* ── Notes viewer ────────────────────────────────────────────────────────── */
+#notes-view { display: none; animation: fadeUp 0.35s ease both; }
+
+.notes-viewer-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.notes-viewer-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  flex: 1;
+}
+
+.complete-btn {
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 2px solid #5bdcae;
+  background: transparent;
+  color: #5bdcae;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.complete-btn:hover, .complete-btn.done {
+  background: #5bdcae;
+  color: #111;
+}
+.complete-btn.done { border-color: #5bdcae; }
+
+.notes-content {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 32px;
+  color: #ccc;
+  font-size: 15px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Code blocks inside notes */
+.notes-content pre {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13.5px;
+  color: #e8e8e8;
+  white-space: pre;
+  line-height: 1.6;
+}
+
+.notes-content code {
+  background: rgba(0, 191, 255, 0.1);
+  color: #00bfff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 13.5px;
+}
+
+.notes-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+.skeleton-card { height: 200px; border-radius: 16px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

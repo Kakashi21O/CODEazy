@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in or create your free CODEazy account to start learning programming today.">
+  <title>Login — CODEazy</title>
+
+  <link rel="stylesheet" href="css/home_page.css">
+  <link rel="stylesheet" href="css/auth.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Header ───────────────────────────────────────────────────────────── -->
+<header>
+  <a href="home.html" class="logo">
+    <img src="images/logo.png" alt="CODEazy Logo">
+  </a>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="notes.html">Notes</a>
+    <a href="teachers.html">Teachers</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <!-- Shown when logged out -->
+  <a href="login.html" id="nav-login-btn" class="login">Login</a>
+
+  <!-- Shown when logged in -->
+  <div id="nav-user-menu" style="display:none; align-items:center; gap:16px;">
+    <a href="dashboard.html" class="login" style="padding:10px 24px;">
+      👤 <span id="nav-user-name"></span>
+    </a>
+    <button id="nav-logout-btn" class="login" style="border:none; cursor:pointer; background:rgba(255,80,80,.12); color:#ff8080; padding:10px 20px;">
+      Logout
+    </button>
+  </div>
+</header>
+
+<!-- ── Auth card ─────────────────────────────────────────────────────────── -->
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2 id="auth-title">Welcome back</h2>
+    <p class="auth-sub" id="auth-sub">Sign in to continue learning</p>
+
+    <!-- Tab switcher -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login"    onclick="switchTab('login')">Login</button>
+      <button class="auth-tab"        id="tab-register" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Message area -->
+    <div class="auth-msg" id="auth-msg"></div>
+
+    <!-- Login form -->
+    <form class="auth-form" id="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="auth-submit" id="login-btn">Sign In</button>
+    </form>
+
+    <!-- Register form (hidden by default) -->
+    <form class="auth-form" id="register-form" style="display:none;" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label for="reg-name">Full name</label>
+        <input type="text" id="reg-name" placeholder="Alice Smith" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email address</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password <span style="color:#555;">(min 6 chars)</span></label>
+        <input type="password" id="reg-password" placeholder="••••••••" required minlength="6">
+      </div>
+      <button type="submit" class="auth-submit" id="register-btn">Create Account</button>
+    </form>
+
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

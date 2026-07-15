@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse courses and study notes on Python, JavaScript, C++, DSA, and Web Development — CODEazy.">
+  <title>Notes — CODEazy</title>
+
+  <link rel="stylesheet" href="css/home_page.css">
+  <link rel="stylesheet" href="css/notes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Header ───────────────────────────────────────────────────────────── -->
+<header>
+  <a href="home.html" class="logo">
+    <img src="images/logo.png" alt="CODEazy Logo">
+  </a>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="notes.html">Notes</a>
+    <a href="teachers.html">Teachers</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="login.html" id="nav-login-btn" class="login">Login</a>
+  <div id="nav-user-menu" style="display:none; align-items:center; gap:16px;">
+    <a href="dashboard.html" class="login" style="padding:10px 24px;">
+      👤 <span id="nav-user-name"></span>
+    </a>
+    <button id="nav-logout-btn" class="login" style="border:none; cursor:pointer; background:rgba(255,80,80,.12); color:#ff8080; padding:10px 20px;">Logout</button>
+  </div>
+</header>
+
+<!-- ── Main ─────────────────────────────────────────────────────────────── -->
+<main class="notes-page">
+  <div class="notes-container">
+
+    <!-- ── View 1: Course grid ─────────────────────────────────────────── -->
+    <div id="course-view">
+      <p class="notes-page-title">Study Materials</p>
+      <h1 class="notes-heading">Browse Courses</h1>
+      <p class="notes-sub">Select a course to explore topics and detailed notes.</p>
+      <div id="course-grid">
+        <!-- skeleton placeholders -->
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+    </div>
+
+    <!-- ── View 2: Subject list ────────────────────────────────────────── -->
+    <div id="subject-view">
+      <button class="back-btn" onclick="showCourseView()">← Back to Courses</button>
+      <h2 class="subject-course-title" id="sv-title"></h2>
+      <p class="subject-course-desc" id="sv-desc"></p>
+      <div class="subject-list" id="subject-list"></div>
+    </div>
+
+    <!-- ── View 3: Notes viewer ────────────────────────────────────────── -->
+    <div id="notes-view">
+      <button class="back-btn" id="notes-back-btn">← Back to Topics</button>
+      <div class="notes-viewer-header">
+        <h2 class="notes-viewer-title" id="nv-title"></h2>
+        <button class="complete-btn" id="complete-btn" onclick="toggleComplete()">Mark Complete</button>
+      </div>
+      <div class="notes-content" id="nv-content"></div>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/notes.js"></script>
+</body>
+</html>

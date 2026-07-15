@@ -1,0 +1,77 @@
+[
+  {
+    "id": "course_python",
+    "title": "Python Programming",
+    "description": "Master Python from basics to advanced concepts including OOP, data structures, and real-world projects.",
+    "icon": "🐍",
+    "color": "#3776AB",
+    "level": "Beginner",
+    "subjects": [
+      { "id": "py_01", "title": "Introduction to Python", "duration": "45 min", "notes": "Python is a high-level, interpreted programming language. Variables are dynamically typed. Use `print()` to output. Indentation is mandatory.\n\n```python\n# Hello World\nprint('Hello, CODEazy!')\n\n# Variables\nname = 'Alice'\nage = 20\npi = 3.14\n```" },
+      { "id": "py_02", "title": "Data Types & Variables", "duration": "50 min", "notes": "Python has several built-in data types: int, float, str, bool, list, tuple, dict, set.\n\n```python\n# Numeric\nx = 42          # int\ny = 3.14        # float\n\n# String\ns = 'Python'\n\n# List (mutable)\nfruits = ['apple', 'banana', 'cherry']\n\n# Tuple (immutable)\ncoords = (10, 20)\n\n# Dictionary\nstudent = {'name': 'Alice', 'grade': 90}\n```" },
+      { "id": "py_03", "title": "Control Flow", "duration": "55 min", "notes": "Control flow lets you make decisions and repeat actions.\n\n```python\n# If-elif-else\nscore = 85\nif score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelse:\n    print('C')\n\n# For loop\nfor i in range(5):\n    print(i)\n\n# While loop\ncount = 0\nwhile count < 3:\n    print(count)\n    count += 1\n```" },
+      { "id": "py_04", "title": "Functions & Modules", "duration": "60 min", "notes": "Functions are reusable blocks of code. Modules let you organise and reuse code across files.\n\n```python\n# Define a function\ndef greet(name, greeting='Hello'):\n    return f'{greeting}, {name}!'\n\nprint(greet('Alice'))\nprint(greet('Bob', 'Hi'))\n\n# Lambda\nsquare = lambda x: x ** 2\n\n# Import a module\nimport math\nprint(math.sqrt(16))\n```" },
+      { "id": "py_05", "title": "Object-Oriented Python", "duration": "70 min", "notes": "OOP organises code around objects. Classes are blueprints for objects.\n\n```python\nclass Animal:\n    def __init__(self, name, sound):\n        self.name = name\n        self.sound = sound\n\n    def speak(self):\n        return f'{self.name} says {self.sound}'\n\nclass Dog(Animal):\n    def fetch(self):\n        return f'{self.name} fetches the ball!'\n\ndog = Dog('Rex', 'Woof')\nprint(dog.speak())\nprint(dog.fetch())\n```" }
+    ]
+  },
+  {
+    "id": "course_js",
+    "title": "JavaScript",
+    "description": "Build interactive web applications with modern JavaScript — ES6+, async programming, and DOM manipulation.",
+    "icon": "⚡",
+    "color": "#F7DF1E",
+    "level": "Beginner",
+    "subjects": [
+      { "id": "js_01", "title": "JavaScript Basics", "duration": "45 min", "notes": "JavaScript runs in the browser and on Node.js. Variables use `let`, `const`, or `var`.\n\n```javascript\n// Variables\nconst name = 'CODEazy'; // cannot reassign\nlet score = 100;        // can reassign\n\n// Template literals\nconsole.log(`Welcome to ${name}!`);\n\n// Types: string, number, boolean, null, undefined, object, symbol\n```" },
+      { "id": "js_02", "title": "Functions & Scope", "duration": "50 min", "notes": "Functions are first-class citizens in JS. Arrow functions are compact.\n\n```javascript\n// Traditional\nfunction add(a, b) { return a + b; }\n\n// Arrow function\nconst multiply = (a, b) => a * b;\n\n// Scope\nconst outer = () => {\n  let x = 10;\n  const inner = () => console.log(x); // closure\n  inner();\n};\n```" },
+      { "id": "js_03", "title": "DOM Manipulation", "duration": "55 min", "notes": "The DOM lets JavaScript interact with HTML elements.\n\n```javascript\n// Select element\nconst btn = document.getElementById('myBtn');\nconst items = document.querySelectorAll('.item');\n\n// Change content\nbtn.textContent = 'Click me!';\nbtn.style.color = '#00bfff';\n\n// Events\nbtn.addEventListener('click', () => {\n  alert('Button clicked!');\n});\n```" },
+      { "id": "js_04", "title": "Arrays & Objects", "duration": "60 min", "notes": "Arrays and objects are essential for managing data in JS.\n\n```javascript\n// Array methods\nconst nums = [1, 2, 3, 4, 5];\nconst doubled = nums.map(n => n * 2);\nconst evens   = nums.filter(n => n % 2 === 0);\nconst sum     = nums.reduce((acc, n) => acc + n, 0);\n\n// Object destructuring\nconst { name, age } = { name: 'Alice', age: 20 };\n\n// Spread\nconst merged = { ...obj1, ...obj2 };\n```" },
+      { "id": "js_05", "title": "Async JavaScript", "duration": "65 min", "notes": "Async code handles operations that take time (API calls, timers).\n\n```javascript\n// Promises\nfetch('/api/data')\n  .then(res => res.json())\n  .then(data => console.log(data))\n  .catch(err => console.error(err));\n\n// Async / Await (cleaner)\nasync function getData() {\n  try {\n    const res = await fetch('/api/data');\n    const data = await res.json();\n    return data;\n  } catch (err) {\n    console.error(err);\n  }\n}\n```" }
+    ]
+  },
+  {
+    "id": "course_cpp",
+    "title": "C++ Programming",
+    "description": "Learn systems programming with C++ — memory management, STL, pointers, and performance-critical code.",
+    "icon": "⚙️",
+    "color": "#00599C",
+    "level": "Intermediate",
+    "subjects": [
+      { "id": "cpp_01", "title": "C++ Fundamentals", "duration": "50 min", "notes": "C++ is a compiled, statically typed language. Every program starts at `main()`.\n\n```cpp\n#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello, CODEazy!\" << endl;\n\n    int x = 10;\n    double pi = 3.14;\n    string name = \"Alice\";\n\n    cout << name << \" knows pi is \" << pi << endl;\n    return 0;\n}\n```" },
+      { "id": "cpp_02", "title": "Pointers & Memory", "duration": "65 min", "notes": "Pointers store memory addresses. Dynamic memory uses `new` and `delete`.\n\n```cpp\nint x = 42;\nint* ptr = &x;   // pointer to x\ncout << *ptr;    // dereference: 42\n\n// Dynamic allocation\nint* arr = new int[5];\narr[0] = 10;\ndelete[] arr;    // free memory\n```" },
+      { "id": "cpp_03", "title": "OOP in C++", "duration": "70 min", "notes": "C++ supports classes, inheritance, and polymorphism.\n\n```cpp\nclass Shape {\npublic:\n    virtual double area() = 0; // pure virtual\n};\n\nclass Circle : public Shape {\n    double r;\npublic:\n    Circle(double radius) : r(radius) {}\n    double area() override { return 3.14 * r * r; }\n};\n\nShape* s = new Circle(5);\ncout << s->area(); // 78.5\ndelete s;\n```" },
+      { "id": "cpp_04", "title": "STL Containers", "duration": "60 min", "notes": "The Standard Template Library provides ready-made data structures.\n\n```cpp\n#include <vector>\n#include <map>\n#include <algorithm>\n\nvector<int> v = {3, 1, 4, 1, 5};\nsort(v.begin(), v.end());\n\nmap<string, int> scores;\nscores[\"Alice\"] = 95;\nscores[\"Bob\"]   = 88;\n\nfor (auto& [name, s] : scores)\n    cout << name << \": \" << s << endl;\n```" },
+      { "id": "cpp_05", "title": "Templates & Generics", "duration": "55 min", "notes": "Templates let you write type-independent code.\n\n```cpp\ntemplate <typename T>\nT maxOf(T a, T b) {\n    return (a > b) ? a : b;\n}\n\ncout << maxOf(3, 7);        // 7\ncout << maxOf(3.5, 2.1);    // 3.5\ncout << maxOf('a', 'z');    // z\n```" }
+    ]
+  },
+  {
+    "id": "course_dsa",
+    "title": "Data Structures & Algorithms",
+    "description": "Master DSA — arrays, linked lists, trees, graphs, sorting algorithms, and Big-O complexity.",
+    "icon": "🧠",
+    "color": "#9B59B6",
+    "level": "Intermediate",
+    "subjects": [
+      { "id": "dsa_01", "title": "Arrays & Complexity", "duration": "50 min", "notes": "Arrays are contiguous memory blocks. Big-O measures time/space efficiency.\n\n```\nO(1)  — constant    → array access by index\nO(n)  — linear      → linear search\nO(n²) — quadratic   → bubble sort\nO(log n) — log      → binary search\n```\n\n```python\narr = [5, 2, 8, 1, 9]\n# Linear search — O(n)\nfor i, val in enumerate(arr):\n    if val == 8:\n        print(f'Found at index {i}')\n```" },
+      { "id": "dsa_02", "title": "Linked Lists", "duration": "55 min", "notes": "Linked lists store nodes with data + pointer to next. No random access.\n\n```python\nclass Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n\n    def append(self, data):\n        node = Node(data)\n        if not self.head:\n            self.head = node; return\n        cur = self.head\n        while cur.next: cur = cur.next\n        cur.next = node\n```" },
+      { "id": "dsa_03", "title": "Stacks & Queues", "duration": "45 min", "notes": "Stack: LIFO. Queue: FIFO.\n\n```python\n# Stack with list\nstack = []\nstack.append(1)  # push\nstack.append(2)\nstack.pop()      # 2 (LIFO)\n\n# Queue with deque\nfrom collections import deque\nq = deque()\nq.append('a')    # enqueue\nq.append('b')\nq.popleft()      # 'a' (FIFO)\n```" },
+      { "id": "dsa_04", "title": "Trees & BST", "duration": "65 min", "notes": "Binary Search Tree: left < root < right. O(log n) search on average.\n\n```python\nclass BST:\n    def __init__(self, val):\n        self.val = val\n        self.left = self.right = None\n\n    def insert(self, val):\n        if val < self.val:\n            if self.left: self.left.insert(val)\n            else: self.left = BST(val)\n        else:\n            if self.right: self.right.insert(val)\n            else: self.right = BST(val)\n```" },
+      { "id": "dsa_05", "title": "Sorting Algorithms", "duration": "70 min", "notes": "Common sorts:\n\n| Algorithm | Best | Avg | Worst | Stable |\n|-----------|------|-----|-------|--------|\n| Bubble    | O(n) | O(n²)| O(n²)| Yes |\n| Merge     | O(n log n)| O(n log n)| O(n log n)| Yes |\n| Quick     | O(n log n)| O(n log n)| O(n²)| No |\n\n```python\ndef merge_sort(arr):\n    if len(arr) <= 1: return arr\n    mid = len(arr) // 2\n    L = merge_sort(arr[:mid])\n    R = merge_sort(arr[mid:])\n    return merge(L, R)\n```" }
+    ]
+  },
+  {
+    "id": "course_webdev",
+    "title": "Web Development",
+    "description": "Build modern web apps with HTML5, CSS3, and JavaScript — from static pages to interactive UIs.",
+    "icon": "🌐",
+    "color": "#E34C26",
+    "level": "Beginner",
+    "subjects": [
+      { "id": "web_01", "title": "HTML5 Fundamentals", "duration": "40 min", "notes": "HTML structures web content. Use semantic tags for accessibility and SEO.\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>My Page</title>\n</head>\n<body>\n  <header><h1>Welcome</h1></header>\n  <main>\n    <section>\n      <p>Content goes here.</p>\n    </section>\n  </main>\n  <footer>© 2024</footer>\n</body>\n</html>\n```" },
+      { "id": "web_02", "title": "CSS3 & Flexbox", "duration": "55 min", "notes": "CSS styles HTML. Flexbox is powerful for 1D layouts.\n\n```css\n.container {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 16px;\n  flex-wrap: wrap;\n}\n\n.card {\n  background: #1d1f20;\n  border-radius: 12px;\n  padding: 24px;\n  transition: transform 0.3s;\n}\n\n.card:hover {\n  transform: translateY(-4px);\n}\n```" },
+      { "id": "web_03", "title": "CSS Grid", "duration": "50 min", "notes": "CSS Grid handles 2D layouts with rows and columns.\n\n```css\n.grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));\n  gap: 24px;\n}\n\n/* Named areas */\n.layout {\n  display: grid;\n  grid-template-areas:\n    'header header'\n    'sidebar main'\n    'footer footer';\n  grid-template-columns: 250px 1fr;\n}\n```" },
+      { "id": "web_04", "title": "Responsive Design", "duration": "50 min", "notes": "Responsive design adapts layout to screen size using media queries.\n\n```css\n/* Mobile first */\n.nav { display: none; }\n\n@media (min-width: 768px) {\n  .nav { display: flex; }\n}\n\n@media (min-width: 1200px) {\n  .container { max-width: 1200px; }\n}\n\n/* Fluid typography */\nhtml { font-size: clamp(14px, 2vw, 18px); }\n```" },
+      { "id": "web_05", "title": "Fetch API & REST", "duration": "60 min", "notes": "The Fetch API lets JavaScript communicate with a server.\n\n```javascript\n// GET request\nasync function getUsers() {\n  const res = await fetch('/api/users');\n  if (!res.ok) throw new Error('Failed');\n  return await res.json();\n}\n\n// POST with auth\nasync function login(email, password) {\n  const res = await fetch('/api/auth/login', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ email, password })\n  });\n  return await res.json();\n}\n```" }
+    ]
+  }
+]

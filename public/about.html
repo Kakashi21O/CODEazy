@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about CODEazy — our mission to make programming education accessible, engaging, and free.">
+  <title>About — CODEazy</title>
+
+  <link rel="stylesheet" href="css/home_page.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    .about-page {
+      min-height: 100vh;
+      padding-top: 90px;
+      background: #1d1f20;
+    }
+    .about-container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 56px 32px;
+    }
+    .about-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #00bfff;
+      margin-bottom: 12px;
+    }
+    .about-title {
+      font-size: 42px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.8px;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+    .about-title span { color: #00bfff; }
+    .about-lead {
+      font-size: 17px;
+      color: #888;
+      line-height: 1.75;
+      margin-bottom: 48px;
+      border-left: 3px solid rgba(0,191,255,.3);
+      padding-left: 20px;
+    }
+    .about-section { margin-bottom: 48px; }
+    .about-section h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 12px;
+    }
+    .about-section p {
+      font-size: 15px;
+      color: #777;
+      line-height: 1.8;
+    }
+    /* Value pills */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .value-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px;
+      padding: 22px 20px;
+      transition: all .25s;
+    }
+    .value-card:hover {
+      border-color: rgba(0,191,255,.2);
+      transform: translateY(-3px);
+    }
+    .value-icon { font-size: 28px; margin-bottom: 10px; }
+    .value-title { font-size: 15px; font-weight: 600; color: white; margin-bottom: 6px; }
+    .value-desc { font-size: 13px; color: #666; line-height: 1.6; }
+
+    /* Stats */
+    .stats-row {
+      display: flex;
+      gap: 0;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .stat-box {
+      flex: 1;
+      padding: 28px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,.06);
+    }
+    .stat-box:last-child { border-right: none; }
+    .stat-num {
+      font-size: 32px;
+      font-weight: 700;
+      color: #00bfff;
+      display: block;
+    }
+    .stat-lbl { font-size: 13px; color: #666; margin-top: 4px; }
+
+    /* CTA */
+    .about-cta {
+      text-align: center;
+      padding: 48px 32px;
+      background: rgba(0,191,255,.05);
+      border: 1px solid rgba(0,191,255,.15);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0,191,255,.06);
+    }
+    .about-cta h2 { font-size: 26px; font-weight: 700; color: white; margin-bottom: 10px; }
+    .about-cta p  { color: #666; margin-bottom: 28px; font-size: 15px; }
+    .cta-btn {
+      display: inline-block;
+      padding: 14px 40px;
+      background: linear-gradient(135deg, #00bfff, #0080cc);
+      color: white;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all .25s;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,191,255,.35);
+    }
+
+    @media(max-width:600px){
+      .stats-row { flex-direction: column; }
+      .stat-box { border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="home.html" class="logo"><img src="images/logo.png" alt="CODEazy Logo"></a>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="notes.html">Notes</a>
+    <a href="teachers.html">Teachers</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="login.html" id="nav-login-btn" class="login">Login</a>
+  <div id="nav-user-menu" style="display:none; align-items:center; gap:16px;">
+    <a href="dashboard.html" class="login" style="padding:10px 24px;">👤 <span id="nav-user-name"></span></a>
+    <button id="nav-logout-btn" class="login" style="border:none;cursor:pointer;background:rgba(255,80,80,.12);color:#ff8080;padding:10px 20px;">Logout</button>
+  </div>
+</header>
+
+<main class="about-page">
+  <div class="about-container">
+
+    <p class="about-label">Our Story</p>
+    <h1 class="about-title">Making code<br><span>eazy</span> for everyone</h1>
+    <p class="about-lead">
+      CODEazy was built on a single belief — quality programming education should be free, clear, and engaging.
+      Whether you're writing your first line of code or mastering advanced algorithms, we're here to guide you every step of the way.
+    </p>
+
+    <!-- Mission -->
+    <div class="about-section">
+      <h2>🎯 Our Mission</h2>
+      <p>
+        We exist to remove the barrier between curiosity and competence. Programming is one of the most powerful skills in the modern world,
+        yet learning resources are often fragmented, expensive, or unnecessarily complex. CODEazy curates structured, hands-on content 
+        designed to take you from zero to job-ready — at your own pace.
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="about-section">
+      <h2>📊 By the Numbers</h2>
+      <div class="stats-row">
+        <div class="stat-box"><span class="stat-num">5</span><div class="stat-lbl">Courses</div></div>
+        <div class="stat-box"><span class="stat-num">25</span><div class="stat-lbl">Topics</div></div>
+        <div class="stat-box"><span class="stat-num">3</span><div class="stat-lbl">Expert Teachers</div></div>
+        <div class="stat-box"><span class="stat-num">100%</span><div class="stat-lbl">Free</div></div>
+      </div>
+    </div>
+
+    <!-- Values -->
+    <div class="about-section">
+      <h2>💡 What We Stand For</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🔓</div>
+          <div class="value-title">Open Access</div>
+          <div class="value-desc">Every course, every note — permanently free.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">⚡</div>
+          <div class="value-title">Clarity First</div>
+          <div class="value-desc">No jargon. Concepts explained as simply as possible.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">📈</div>
+          <div class="value-title">Track Progress</div>
+          <div class="value-desc">Know exactly where you are and what's next.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <div class="value-title">Community</div>
+          <div class="value-desc">Built by learners, for learners.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="about-cta">
+      <h2>Ready to start learning?</h2>
+      <p>Join thousands of students already coding with CODEazy.</p>
+      <a href="login.html" class="cta-btn" id="about-cta-btn">Get Started Free →</a>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  // Update CTA based on auth state
+  document.addEventListener('DOMContentLoaded', () => {
+    if (Auth.isLoggedIn()) {
+      const btn = document.getElementById('about-cta-btn');
+      btn.href = 'notes.html';
+      btn.textContent = 'Browse Courses →';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "teacher_01",
+    "name": "Dr. Arjun Mehta",
+    "role": "Python & DSA Instructor",
+    "bio": "PhD in Computer Science from IIT Delhi. 12+ years of teaching experience. Passionate about making algorithms accessible to everyone. Published researcher in machine learning and computational complexity.",
+    "courses": ["Python Programming", "Data Structures & Algorithms"],
+    "rating": 4.9,
+    "students": 4820,
+    "avatar": "AM",
+    "color": "#3776AB"
+  },
+  {
+    "id": "teacher_02",
+    "name": "Ms. Priya Sharma",
+    "role": "Web Development Instructor",
+    "bio": "Senior Front-End Engineer with 8 years at top product companies. Expert in modern JavaScript, React, and CSS architecture. Loves building beautiful, accessible UIs and teaching others to do the same.",
+    "courses": ["JavaScript", "Web Development"],
+    "rating": 4.8,
+    "students": 6130,
+    "avatar": "PS",
+    "color": "#F7DF1E"
+  },
+  {
+    "id": "teacher_03",
+    "name": "Mr. Karan Nair",
+    "role": "Systems Programming Instructor",
+    "bio": "10 years of systems programming experience across embedded systems and game engines. Competitive programming finalist. Believes C++ is an art form and aims to teach it with that perspective.",
+    "courses": ["C++ Programming"],
+    "rating": 4.7,
+    "students": 3240,
+    "avatar": "KN",
+    "color": "#00599C"
+  }
+]

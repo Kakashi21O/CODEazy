@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CODEazy — Free, structured programming courses in Python, JavaScript, C++, DSA and Web Development.">
+  <title>CODEazy — Your Code, Your Future</title>
+
+  <link rel="stylesheet" href="css/home_page.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Extra home-specific styles */
+    body { height: auto; }
+
+    /* Hero */
+    .hero-container {
+      margin-top: 130px;
+    }
+    .hero-container h1 {
+      font-size: clamp(42px, 7vw, 80px);
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .hero-container p {
+      font-size: 18px;
+      color: #88BDF2;
+      margin-bottom: 36px;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-btn-primary {
+      padding: 14px 40px;
+      background: linear-gradient(135deg, #00bfff, #0080cc);
+      color: white;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all .25s;
+    }
+    .hero-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,191,255,.4);
+    }
+    .hero-btn-secondary {
+      padding: 14px 40px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      color: white;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all .25s;
+    }
+    .hero-btn-secondary:hover {
+      background: rgba(255,255,255,.1);
+    }
+
+    /* Courses strip */
+    .courses-strip {
+      max-width: 1200px;
+      margin: 64px auto;
+      padding: 0 32px;
+    }
+    .courses-strip h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #888;
+      text-align: center;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+    .courses-pills {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .course-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      color: #ccc;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all .22s;
+    }
+    .course-pill:hover {
+      border-color: rgba(0,191,255,.3);
+      color: white;
+      background: rgba(0,191,255,.07);
+    }
+    .course-pill-icon { font-size: 18px; }
+
+    /* Features */
+    .features {
+      max-width: 1100px;
+      margin: 0 auto 80px;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: all .25s;
+    }
+    .feature-card:hover {
+      border-color: rgba(0,191,255,.18);
+      transform: translateY(-3px);
+    }
+    .feat-icon { font-size: 30px; margin-bottom: 14px; }
+    .feat-title { font-size: 17px; font-weight: 600; color: white; margin-bottom: 8px; }
+    .feat-desc  { font-size: 13.5px; color: #666; line-height: 1.65; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="home.html" class="logo">
+    <img src="images/logo.png" alt="CODEazy Logo">
+  </a>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="notes.html">Notes</a>
+    <a href="teachers.html">Teachers</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="login.html" id="nav-login-btn" class="login">Login</a>
+  <div id="nav-user-menu" style="display:none; align-items:center; gap:16px;">
+    <a href="dashboard.html" class="login" style="padding:10px 24px;">👤 <span id="nav-user-name"></span></a>
+    <button id="nav-logout-btn" class="login" style="border:none;cursor:pointer;background:rgba(255,80,80,.12);color:#ff8080;padding:10px 20px;">Logout</button>
+  </div>
+</header>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────── -->
+<section class="hero-container">
+  <h1>CODEazy</h1>
+  <p>Your code, your future</p>
+  <div class="hero-btns">
+    <a href="notes.html" class="hero-btn-primary">Browse Courses →</a>
+    <a href="about.html" class="hero-btn-secondary">Learn More</a>
+  </div>
+</section>
+
+<!-- ── Course pills ──────────────────────────────────────────────────────── -->
+<div class="courses-strip">
+  <h2>What you'll learn</h2>
+  <div class="courses-pills" id="course-pills">
+    <a href="notes.html" class="course-pill"><span class="course-pill-icon">🐍</span> Python</a>
+    <a href="notes.html" class="course-pill"><span class="course-pill-icon">⚡</span> JavaScript</a>
+    <a href="notes.html" class="course-pill"><span class="course-pill-icon">⚙️</span> C++</a>
+    <a href="notes.html" class="course-pill"><span class="course-pill-icon">🧠</span> Data Structures</a>
+    <a href="notes.html" class="course-pill"><span class="course-pill-icon">🌐</span> Web Development</a>
+  </div>
+</div>
+
+<!-- ── Feature cards ─────────────────────────────────────────────────────── -->
+<div class="features">
+  <div class="feature-card">
+    <div class="feat-icon">📖</div>
+    <div class="feat-title">Structured Notes</div>
+    <div class="feat-desc">Clean, code-rich notes for every topic — no fluff, just the essentials.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feat-icon">📈</div>
+    <div class="feat-title">Progress Tracking</div>
+    <div class="feat-desc">Mark topics complete and watch your progress bars fill up — one concept at a time.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feat-icon">👨‍🏫</div>
+    <div class="feat-title">Expert Teachers</div>
+    <div class="feat-desc">Content curated by experienced instructors from top companies and universities.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feat-icon">🔓</div>
+    <div class="feat-title">100% Free</div>
+    <div class="feat-desc">Every course, every topic, forever free. No paywalls, no ads.</div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+</body>
+</html>
