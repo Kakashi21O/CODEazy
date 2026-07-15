@@ -136,6 +136,41 @@ nav a:hover{
     color:black;
 }
 
+/* glowing box title */
+
+.hero-container{
+
+    width:90%;
+    max-width:1200px;
+
+    margin:100px auto;
+
+    padding:30px 30px;
+
+    background:#11111169;
+
+    border:2px solid #00bfff;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    /* Glow */
+    box-shadow:
+        0 0 8px rgba(0,191,255,.7),
+        0 0 18px rgba(0,191,255,.5),
+        0 0 35px rgba(0,191,255,.3);
+
+    transition:.3s;
+}
+
+.hero-container:hover{
+
+    box-shadow:
+        0 0 10px rgba(0,191,255,.9),
+        0 0 25px rgba(0,191,255,.7),
+        0 0 45px rgba(0,191,255,.5);
+}
 
 /* MOBILE */
 
