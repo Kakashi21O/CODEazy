@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadCompletedIfLoggedIn();
   await loadCourses();
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseParam = urlParams.get('course');
+  if (courseParam) {
+    showSubjectView(courseParam);
+  }
+
   document.getElementById('notes-back-btn').addEventListener('click', () => {
     showSubjectView(currentCourseId);
   });

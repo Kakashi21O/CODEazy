@@ -73,5 +73,45 @@
       { "id": "web_04", "title": "Responsive Design", "duration": "50 min", "notes": "Responsive design adapts layout to screen size using media queries.\n\n```css\n/* Mobile first */\n.nav { display: none; }\n\n@media (min-width: 768px) {\n  .nav { display: flex; }\n}\n\n@media (min-width: 1200px) {\n  .container { max-width: 1200px; }\n}\n\n/* Fluid typography */\nhtml { font-size: clamp(14px, 2vw, 18px); }\n```" },
       { "id": "web_05", "title": "Fetch API & REST", "duration": "60 min", "notes": "The Fetch API lets JavaScript communicate with a server.\n\n```javascript\n// GET request\nasync function getUsers() {\n  const res = await fetch('/api/users');\n  if (!res.ok) throw new Error('Failed');\n  return await res.json();\n}\n\n// POST with auth\nasync function login(email, password) {\n  const res = await fetch('/api/auth/login', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ email, password })\n  });\n  return await res.json();\n}\n```" }
     ]
+  },
+  {
+    "id": "course_devops",
+    "title": "DevOps",
+    "description": "Learn modern DevOps practices including Linux, Git, Docker, CI/CD, Kubernetes, Cloud, and Infrastructure Automation to build, deploy, and manage applications efficiently.",
+    "icon": "⚙️",
+    "color": "#2496ED",
+    "level": "Beginner",
+    "subjects": [
+    {
+      "id": "devops_01",
+      "title": "Linux Fundamentals",
+      "duration": "45 min",
+      "notes": "Linux is the foundation of most DevOps environments. Learn file navigation, permissions, users, processes, and essential commands.\n\n```bash\npwd\nls -la\ncd /var/www\nmkdir project\ncp file.txt backup.txt\nmv backup.txt archive.txt\nrm -rf temp\nchmod 755 script.sh\nchown ubuntu:ubuntu app\nps aux\ntop\nsystemctl status nginx\n```"
+    },
+    {
+      "id": "devops_02",
+      "title": "Git & GitHub",
+      "duration": "50 min",
+      "notes": "Git is a distributed version control system used to track code changes and collaborate with teams.\n\n```bash\ngit init\ngit clone https://github.com/user/project.git\ngit status\ngit add .\ngit commit -m \"Initial commit\"\ngit branch feature-auth\ngit checkout feature-auth\ngit merge feature-auth\ngit push origin main\n```"
+    },
+    {
+      "id": "devops_03",
+      "title": "Docker Basics",
+      "duration": "60 min",
+      "notes": "Docker packages applications and dependencies into lightweight containers.\n\n```dockerfile\nFROM openjdk:21-jdk\nWORKDIR /app\nCOPY target/app.jar app.jar\nEXPOSE 8080\nENTRYPOINT [\"java\",\"-jar\",\"app.jar\"]\n```\n\n```bash\ndocker build -t my-app .\ndocker images\ndocker run -d -p 8080:8080 my-app\ndocker ps\ndocker logs <container-id>\ndocker stop <container-id>\n```"
+    },
+    {
+      "id": "devops_04",
+      "title": "CI/CD with GitHub Actions",
+      "duration": "60 min",
+      "notes": "CI/CD automates building, testing, and deploying applications whenever code changes.\n\n```yaml\nname: Build\n\non:\n  push:\n    branches: [main]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with:\n          distribution: temurin\n          java-version: '21'\n      - run: ./mvnw clean package\n```\n"
+    },
+    {
+      "id": "devops_05",
+      "title": "Kubernetes Introduction",
+      "duration": "70 min",
+      "notes": "Kubernetes automates container deployment, scaling, and management across clusters.\n\n```yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: spring-app\nspec:\n  replicas: 2\n  selector:\n    matchLabels:\n      app: spring-app\n  template:\n    metadata:\n      labels:\n        app: spring-app\n    spec:\n      containers:\n      - name: app\n        image: my-app:latest\n        ports:\n        - containerPort: 8080\n```\n\n```bash\nkubectl get pods\nkubectl get services\nkubectl apply -f deployment.yaml\nkubectl delete deployment spring-app\n```"
+    }
+    ]
   }
 ]
