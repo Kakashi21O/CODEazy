@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 
-from app.routers import auth, course, progress, teacher
+from app.routers import auth, course, progress, teacher, admin, notes_upload
 
 app = FastAPI(title="CODEazy API")
 
@@ -20,6 +20,8 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(course.router, prefix="/api/courses", tags=["courses"])
 app.include_router(progress.router, prefix="/api/progress", tags=["progress"])
 app.include_router(teacher.router, prefix="/api/teachers", tags=["teachers"])
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+app.include_router(notes_upload.router, prefix="/api/notes", tags=["notes"])
 
 PUBLIC_DIR = Path(__file__).resolve().parent / "public"
 

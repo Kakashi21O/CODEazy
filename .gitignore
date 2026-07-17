@@ -27,3 +27,6 @@ Thumbs.db
 node_modules/
 npm-debug.log*
 package-lock.json
+
+# For easyly runing I have add run.bat thats why 
+run.bat

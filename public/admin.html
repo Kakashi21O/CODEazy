@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — CODEazy</title>
+  <link rel="stylesheet" href="css/home_page.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { height: auto; }
+    .admin-wrap { max-width: 960px; margin: 120px auto 60px; padding: 0 24px; }
+    .admin-title { font-size: 30px; font-weight: 600; color: white; margin-bottom: 6px; }
+    .admin-sub { color: #666; font-size: 14px; margin-bottom: 36px; }
+    .admin-section { margin-bottom: 48px; }
+    .admin-section h2 { font-size: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,.06); padding-bottom: 10px; }
+
+    /* Users table */
+    .users-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .users-table th { text-align: left; color: #666; font-weight: 500; padding: 10px 14px; }
+    .users-table td { padding: 12px 14px; border-top: 1px solid rgba(255,255,255,.05); color: #ccc; }
+    .users-table tr:hover td { background: rgba(255,255,255,.03); }
+    .role-select { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: #ccc; padding: 5px 10px; border-radius: 6px; font-family: Inter, sans-serif; font-size: 13px; cursor: pointer; }
+    .role-select:focus { outline: none; border-color: rgba(0,191,255,.4); }
+    .save-role-btn { padding: 5px 14px; border: none; border-radius: 6px; background: rgba(0,191,255,.15); color: #00bfff; font-size: 12px; font-family: Inter, sans-serif; cursor: pointer; transition: background .2s; }
+    .save-role-btn:hover { background: rgba(0,191,255,.28); }
+    #admin-msg { margin-bottom: 16px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+    #admin-msg.ok  { display: block; background: rgba(91,220,174,.1); color: #5bdcae; border: 1px solid rgba(91,220,174,.25); }
+    #admin-msg.err { display: block; background: rgba(255,80,80,.1);  color: #ff8080;  border: 1px solid rgba(255,80,80,.25); }
+
+    /* Upload form */
+    .upload-form { display: flex; flex-direction: column; gap: 16px; max-width: 600px; }
+    .upload-form label { font-size: 13px; color: #aaa; font-weight: 500; }
+    .upload-form input, .upload-form select, .upload-form textarea {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 10px;
+      padding: 12px 16px; color: white; font-size: 14px; font-family: Inter, sans-serif; outline: none; width: 100%; box-sizing: border-box;
+    }
+    .upload-form textarea { min-height: 160px; resize: vertical; }
+    .upload-form input:focus, .upload-form select:focus, .upload-form textarea:focus { border-color: rgba(0,191,255,.4); }
+    .upload-form select option { background: #1d1f20; }
+    #upload-msg { padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+    #upload-msg.ok  { display: block; background: rgba(91,220,174,.1); color: #5bdcae; border: 1px solid rgba(91,220,174,.25); }
+    #upload-msg.err { display: block; background: rgba(255,80,80,.1);  color: #ff8080;  border: 1px solid rgba(255,80,80,.25); }
+    .search-input { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 10px 14px; color: #ccc; font-family: Inter, sans-serif; font-size: 14px; outline: none; margin-bottom: 14px; width: 260px; box-sizing: border-box;}
+    .search-input:focus { border-color: rgba(0,191,255,.4); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="home.html" class="logo"><img src="images/logo.png" alt="CODEazy Logo"></a>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="notes.html">Notes</a>
+    <a href="teachers.html">Teachers</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="login.html" id="nav-login-btn" class="login">Login</a>
+  <div id="nav-user-menu" style="display:none; align-items:center; gap:16px;">
+    <a href="dashboard.html" class="login" style="padding:10px 24px;">👤 <span id="nav-user-name"></span></a>
+    <button id="nav-logout-btn" class="login" style="border:none;cursor:pointer;background:rgba(255,80,80,.12);color:#ff8080;padding:10px 20px;">Logout</button>
+  </div>
+</header>
+
+<div class="admin-wrap" id="admin-content" style="display:none;">
+  <h1 class="admin-title">Admin Panel</h1>
+  <p class="admin-sub">Manage users and upload notes.</p>
+  <div id="admin-msg"></div>
+
+  <!-- ── User Management ───────────────────────────── -->
+  <div class="admin-section" id="section-users">
+    <h2>User Management</h2>
+    <input type="text" class="search-input" id="user-search" placeholder="Search by name or email…" oninput="filterUsers()">
+    <table class="users-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+      <tbody id="users-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── Upload Notes (Teacher/Admin) ─────────────── -->
+  <div class="admin-section" id="section-upload">
+    <h2>Upload Notes</h2>
+    <div id="upload-msg"></div>
+    <form class="upload-form" onsubmit="handleUpload(event)">
+      <div><label>Course</label><select id="upload-course"></select></div>
+      <div><label>Topic Title</label><input type="text" id="upload-title" placeholder="e.g. Introduction to Docker" required></div>
+      <div><label>Duration</label><input type="text" id="upload-duration" placeholder="e.g. 45 min" required></div>
+      <div><label>Notes (plain text or ```code blocks```)</label><textarea id="upload-notes" required></textarea></div>
+      <button type="submit" class="auth-submit" style="max-width:200px;">Upload Notes</button>
+    </form>
+  </div>
+</div>
+
+<div id="access-denied" style="display:none; text-align:center; margin-top:160px; color:#666;">
+  <p style="font-size:22px;">🔒 Access Denied</p>
+  <p>You don't have permission to view this page.</p>
+  <a href="home.html" class="hero-btn-primary" style="display:inline-block;margin-top:20px;text-decoration:none;padding:12px 28px;border-radius:999px;background:linear-gradient(135deg,#00bfff,#0080cc);color:white;font-weight:600;">Go Home</a>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/nav.js"></script>
+<script>
+  let allUsers = [];
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const user = Auth.getUser();
+    if (!user) { window.location.href = '/login.html'; return; }
+
+    // Show upload section for teacher+, user management for admin only
+    if (user.role === 'teacher') {
+      document.getElementById('admin-content').style.display = 'block';
+      document.getElementById('section-users').style.display = 'none';
+      await loadCourseSelect();
+    } else if (user.role === 'admin') {
+      document.getElementById('admin-content').style.display = 'block';
+      await Promise.all([loadUsers(), loadCourseSelect()]);
+    } else {
+      document.getElementById('access-denied').style.display = 'block';
+    }
+
+    // Scroll to upload section if #upload in URL
+    if (window.location.hash === '#upload') {
+      document.getElementById('section-upload').scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  async function loadUsers() {
+    try {
+      allUsers = await Admin.getUsers();
+      renderUsers(allUsers);
+    } catch(e) { showAdminMsg('Failed to load users: ' + e.message, 'err'); }
+  }
+
+  function renderUsers(users) {
+    const roles = ['student', 'teacher', 'admin'];
+    document.getElementById('users-tbody').innerHTML = users.map(u => `
+      <tr>
+        <td>${u.name}</td>
+        <td style="color:#666;">${u.email}</td>
+        <td>
+          <select class="role-select" id="role-${u.id}">
+            ${roles.map(r => `<option value="${r}" ${u.role===r?'selected':''}>${r}</option>`).join('')}
+          </select>
+        </td>
+        <td><button class="save-role-btn" onclick="saveRole('${u.id}')">Save</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function filterUsers() {
+    const q = document.getElementById('user-search').value.toLowerCase();
+    renderUsers(allUsers.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)));
+  }
+
+  async function saveRole(userId) {
+    const role = document.getElementById(`role-${userId}`).value;
+    try {
+      await Admin.setRole(userId, role);
+      showAdminMsg(`Role updated to "${role}".`, 'ok');
+      // Update local cache
+      const u = allUsers.find(x => x.id === userId);
+      if (u) u.role = role;
+    } catch(e) { showAdminMsg('Failed: ' + e.message, 'err'); }
+  }
+
+  async function loadCourseSelect() {
+    try {
+      const courses = await Courses.getAll();
+      document.getElementById('upload-course').innerHTML =
+        courses.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+    } catch(e) {}
+  }
+
+  async function handleUpload(e) {
+    e.preventDefault();
+    const data = {
+      courseId: document.getElementById('upload-course').value,
+      title:    document.getElementById('upload-title').value.trim(),
+      duration: document.getElementById('upload-duration').value.trim(),
+      notes:    document.getElementById('upload-notes').value,
+    };
+    try {
+      await NotesUpload.upload(data);
+      showUploadMsg('Notes uploaded successfully!', 'ok');
+      e.target.reset();
+    } catch(err) { showUploadMsg('Upload failed: ' + err.message, 'err'); }
+  }
+
+  function showAdminMsg(text, cls) {
+    const el = document.getElementById('admin-msg');
+    el.textContent = text; el.className = cls;
+    setTimeout(() => el.className = '', 3000);
+  }
+  function showUploadMsg(text, cls) {
+    const el = document.getElementById('upload-msg');
+    el.textContent = text; el.className = cls;
+    setTimeout(() => el.className = '', 3000);
+  }
+</script>
+</body>
+</html>

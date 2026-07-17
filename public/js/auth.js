@@ -90,3 +90,9 @@ async function handleRegister(e) {
     setLoading('register-btn', false);
   }
 }
+
+function handleGoogleAuth() {
+  // Google OAuth requires a registered OAuth app and redirect URI.
+  // Replace this URL with your actual Google OAuth endpoint when configured.
+  showMsg('Google Sign-In not configured yet. Use email/password for now.', 'error');
+}

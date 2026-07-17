@@ -73,3 +73,14 @@ const Progress = {
 const Teachers = {
   getAll: () => apiFetch('/teachers'),
 };
+
+// ── Admin helpers ─────────────────────────────────────────────────────────────
+const Admin = {
+  getUsers:   ()                    => apiFetch('/admin/users', {}, true),
+  setRole:    (userId, role)        => apiFetch(`/admin/users/${userId}/role`, { method: 'PATCH', body: JSON.stringify({ role }) }, true),
+};
+
+// ── Notes upload ──────────────────────────────────────────────────────────────
+const NotesUpload = {
+  upload: (data) => apiFetch('/notes/upload', { method: 'POST', body: JSON.stringify(data) }, true),
+};

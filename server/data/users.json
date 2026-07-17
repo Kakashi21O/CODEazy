@@ -5,5 +5,19 @@
     "email": "test@codeazy.com",
     "passwordHash": "$2a$10$KyNt/s.gauQ6PWZVzqh5h.GswbPgZ3QdEHxi/jAWlnkaFgiWWcr1m",
     "createdAt": "2026-07-15T15:38:42.193Z"
+  },
+  {
+    "id": "567816c3-8ae0-4d29-a71d-3ab79a61237e",
+    "name": "1",
+    "email": "1@gmail.com",
+    "passwordHash": "$2b$12$qkYMDhtJVjeQCepfWQblm.0vFbK.dAnXtPpwlAgR6M9mX02AH3pMa",
+    "role": "student"
+  },
+  {
+    "id": "567816c3-8ae0-4d29-a71d-3ab79a61237e",
+    "name": "1",
+    "email": "1@gmail.com",
+    "passwordHash": "$2b$12$qkYMDhtJVjeQCepfWQblm.0vFbK.dAnXtPpwlAgR6M9mX02AH3pMa",
+    "role": "admin"
   }
 ]

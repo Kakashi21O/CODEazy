@@ -41,8 +41,13 @@
 
     <!-- ── View 1: Course grid ─────────────────────────────────────────── -->
     <div id="course-view">
-      <p class="notes-page-title">Study Materials</p>
-      <h1 class="notes-heading">Browse Courses</h1>
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <p class="notes-page-title">Study Materials</p>
+          <h1 class="notes-heading">Browse Courses</h1>
+        </div>
+        <button id="add-notes-btn" style="display:none;" class="complete-btn" onclick="window.location='admin.html#upload'">+ Add Notes</button>
+      </div>
       <p class="notes-sub">Select a course to explore topics and detailed notes.</p>
       <div id="course-grid">
         <!-- skeleton placeholders -->
@@ -78,5 +83,14 @@
 <script src="js/api.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/notes.js"></script>
+<script>
+  // Show Add Notes button for teacher/admin
+  document.addEventListener('DOMContentLoaded', () => {
+    const u = Auth.getUser();
+    if (u && (u.role === 'teacher' || u.role === 'admin')) {
+      document.getElementById('add-notes-btn').style.display = 'inline-flex';
+    }
+  });
+</script>
 </body>
 </html>

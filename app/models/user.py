@@ -24,17 +24,30 @@ def find_by_id(user_id: str) -> Dict[str, Any]:
 def find_by_email(email: str) -> Dict[str, Any]:
     return next((u for u in read_all() if u["email"].lower() == email.lower()), None)
 
-def create(name: str, email: str, password_hash: str) -> Dict[str, Any]:
+def create(name: str, email: str, password_hash: str, role: str = "student") -> Dict[str, Any]:
     users = read_all()
     user = {
         "id": str(uuid.uuid4()),
         "name": name,
         "email": email.lower(),
         "passwordHash": password_hash,
+        "role": role,
     }
     users.append(user)
     write_all(users)
     return user
+
+def find_all() -> List[Dict[str, Any]]:
+    return [to_public(u) for u in read_all()]
+
+def update_role(user_id: str, role: str) -> bool:
+    users = read_all()
+    for u in users:
+        if u["id"] == user_id:
+            u["role"] = role
+            write_all(users)
+            return True
+    return False
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
