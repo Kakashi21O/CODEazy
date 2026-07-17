@@ -21,3 +21,10 @@ def assign_role(user_id: str, body: RoleUpdate, _=Depends(require_role("admin"))
     if not user_model.update_role(user_id, body.role):
         raise HTTPException(status_code=404, detail="User not found")
     return {"userId": user_id, "role": body.role}
+
+@router.delete("/users/{user_id}")
+def delete_user(user_id: str, _=Depends(require_role("admin"))):
+    if not user_model.delete_user(user_id):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {"message": "User deleted"}

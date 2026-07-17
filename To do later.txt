@@ -1,0 +1,3 @@
+fix ui of admin panal
+show differnt to teacher in place of admin panal
+adding pdf and other to be uploading 

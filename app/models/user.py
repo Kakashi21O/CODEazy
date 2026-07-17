@@ -49,6 +49,17 @@ def update_role(user_id: str, role: str) -> bool:
             return True
     return False
 
+def delete_user(user_id: str) -> bool:
+    users = read_all()
+
+    for i, user in enumerate(users):
+        if user["id"] == user_id:
+            users.pop(i)
+            write_all(users)
+            return True
+
+    return False
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 

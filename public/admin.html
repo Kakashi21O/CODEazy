@@ -43,6 +43,8 @@
     #upload-msg.err { display: block; background: rgba(255,80,80,.1);  color: #ff8080;  border: 1px solid rgba(255,80,80,.25); }
     .search-input { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 10px 14px; color: #ccc; font-family: Inter, sans-serif; font-size: 14px; outline: none; margin-bottom: 14px; width: 260px; box-sizing: border-box;}
     .search-input:focus { border-color: rgba(0,191,255,.4); }
+    .delete-user-btn{ padding:5px 14px; border:none; border-radius:6px; background:rgba(255,80,80,.15); color:#ff5050; font-size:12px; font-family:Inter,sans-serif; cursor:pointer; transition:.2s;}
+    .delete-user-btn:hover{background:rgba(255,80,80,.28);}
   </style>
 </head>
 <body>
@@ -72,7 +74,7 @@
     <h2>User Management</h2>
     <input type="text" class="search-input" id="user-search" placeholder="Search by name or email…" oninput="filterUsers()">
     <table class="users-table">
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th><th></th></tr></thead>
       <tbody id="users-tbody"></tbody>
     </table>
   </div>
@@ -143,6 +145,7 @@
           </select>
         </td>
         <td><button class="save-role-btn" onclick="saveRole('${u.id}')">Save</button></td>
+        <td><button class="delete-user-btn" onclick="deleteUser('${u.id}')">Delete</button></td>
       </tr>
     `).join('');
   }
@@ -161,6 +164,21 @@
       const u = allUsers.find(x => x.id === userId);
       if (u) u.role = role;
     } catch(e) { showAdminMsg('Failed: ' + e.message, 'err'); }
+  }
+
+  async function deleteUser(userId) {
+      if (!confirm("Delete this user?")) return;
+
+      try {
+          await Admin.deleteUser(userId);
+
+          allUsers = allUsers.filter(u => u.id !== userId);
+          renderUsers(allUsers);
+
+          showAdminMsg("User deleted successfully.", "ok");
+      } catch (e) {
+          showAdminMsg("Delete failed: " + e.message, "err");
+      }
   }
 
   async function loadCourseSelect() {
