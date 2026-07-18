@@ -100,30 +100,78 @@ async function loadSubjects(courseId) {
 }
 
 // ── Notes viewer ──────────────────────────────────────────────────────────────
+// ── Notes viewer ──────────────────────────────────────────────────────────────
 async function openSubject(subjectId) {
   currentSubjectId = subjectId;
   showNotesView();
 
   document.getElementById('nv-title').textContent   = 'Loading…';
   document.getElementById('nv-content').textContent = '';
+  document.getElementById('nv-pdf-btn').style.display = 'none';
+  document.getElementById('nv-edit-btn').style.display = 'none';
+  document.getElementById('nv-save-btn').style.display = 'none';
+  document.getElementById('nv-content').contentEditable = "false";
+  document.getElementById('nv-content').style.outline = "none";
 
   try {
     const subject = await Courses.getSubject(subjectId);
     document.getElementById('nv-title').textContent = subject.title;
 
-    // Render notes — parse backtick code blocks into <pre><code>
-    document.getElementById('nv-content').innerHTML = renderNotes(subject.notes);
+    if (subject.pdf_url) {
+      const pdfBtn = document.getElementById('nv-pdf-btn');
+      pdfBtn.href = subject.pdf_url;
+      pdfBtn.style.display = 'inline-block';
+    }
 
-    // Update complete button state
+    const u = Auth.getUser();
+    if (u && (u.role === 'teacher' || u.role === 'admin')) {
+      document.getElementById('nv-edit-btn').style.display = 'inline-block';
+    }
+
+    // Render notes — if it has a pdf_url, it's HTML. Otherwise, it's old markdown.
+    document.getElementById('nv-content').innerHTML = renderNotes(subject.notes, !!subject.pdf_url);
     updateCompleteBtn();
   } catch (err) {
     document.getElementById('nv-content').textContent = 'Failed to load notes.';
   }
 }
 
-/** Simple renderer: turns ```lang\n...\n``` blocks into <pre><code> */
-function renderNotes(text) {
+document.getElementById('nv-edit-btn').addEventListener('click', () => {
+  const content = document.getElementById('nv-content');
+  content.contentEditable = "true";
+  content.focus();
+  content.style.outline = "2px solid #00bfff";
+  document.getElementById('nv-edit-btn').style.display = 'none';
+  document.getElementById('nv-save-btn').style.display = 'inline-block';
+});
+
+document.getElementById('nv-save-btn').addEventListener('click', async () => {
+  const content = document.getElementById('nv-content');
+  const btn = document.getElementById('nv-save-btn');
+  const html = content.innerHTML;
+  
+  btn.textContent = "Saving...";
+  btn.disabled = true;
+  
+  try {
+    await NotesUpload.update(currentCourseId, currentSubjectId, html);
+    content.contentEditable = "false";
+    content.style.outline = "none";
+    document.getElementById('nv-edit-btn').style.display = 'inline-block';
+    document.getElementById('nv-save-btn').style.display = 'none';
+  } catch(e) {
+    alert("Failed to save notes: " + e.message);
+  } finally {
+    btn.textContent = "💾 Save";
+    btn.disabled = false;
+  }
+});
+
+/** Simple renderer: turns ```lang\n...\n``` blocks into <pre><code> if not pure html */
+function renderNotes(text, isHtml = false) {
   if (!text) return '';
+  if (isHtml) return text; // It's already converted from PDF Markdown
+  
   // Escape HTML
   const escape = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 

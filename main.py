@@ -24,7 +24,9 @@ app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(notes_upload.router, prefix="/api/notes", tags=["notes"])
 
 PUBLIC_DIR = Path(__file__).resolve().parent / "public"
+PDFS_DIR = Path(__file__).resolve().parent / "server" / "data" / "pdfs"
 
+app.mount("/api/pdfs", StaticFiles(directory=PDFS_DIR), name="pdfs")
 app.mount("/css", StaticFiles(directory=PUBLIC_DIR / "css"), name="css")
 app.mount("/js", StaticFiles(directory=PUBLIC_DIR / "js"), name="js")
 app.mount("/images", StaticFiles(directory=PUBLIC_DIR / "images"), name="images")

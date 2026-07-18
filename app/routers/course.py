@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from pydantic import BaseModel
 from app.models import course as course_model
+from app.routers.auth import require_role
 
 router = APIRouter()
 
@@ -27,3 +29,20 @@ def get_subjects(course_id: str):
     if subjects is None:
         raise HTTPException(status_code=404, detail={"error": "Course not found"})
     return subjects
+
+class NoteEdit(BaseModel):
+    notes: str
+
+@router.put("/{course_id}/subjects/{subject_id}")
+def update_subject(course_id: str, subject_id: str, body: NoteEdit, _=Depends(require_role("teacher", "admin"))):
+    courses = course_model.read_all()
+    
+    for c in courses:
+        if c["id"] == course_id:
+            for s in c.get("subjects", []):
+                if s["id"] == subject_id:
+                    s["notes"] = body.notes
+                    course_model.write_all(courses)
+                    return {"status": "success"}
+                    
+    raise HTTPException(status_code=404, detail="Course or subject not found")

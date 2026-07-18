@@ -87,8 +87,8 @@
       <div><label>Course</label><select id="upload-course"></select></div>
       <div><label>Topic Title</label><input type="text" id="upload-title" placeholder="e.g. Introduction to Docker" required></div>
       <div><label>Duration</label><input type="text" id="upload-duration" placeholder="e.g. 45 min" required></div>
-      <div><label>Notes (plain text or ```code blocks```)</label><textarea id="upload-notes" required></textarea></div>
-      <button type="submit" class="auth-submit" style="max-width:200px;">Upload Notes</button>
+      <div><label>PDF Notes File</label><input type="file" id="upload-pdf" accept="application/pdf" required style="padding:8px 16px;"></div>
+      <button type="submit" class="auth-submit" style="max-width:200px;" id="upload-btn">Upload PDF Notes</button>
     </form>
   </div>
 </div>
@@ -191,17 +191,30 @@
 
   async function handleUpload(e) {
     e.preventDefault();
-    const data = {
-      courseId: document.getElementById('upload-course').value,
-      title:    document.getElementById('upload-title').value.trim(),
-      duration: document.getElementById('upload-duration').value.trim(),
-      notes:    document.getElementById('upload-notes').value,
-    };
+    const btn = document.getElementById('upload-btn');
+    btn.disabled = true;
+    btn.textContent = "Uploading & Converting...";
+
+    const formData = new FormData();
+    formData.append('courseId', document.getElementById('upload-course').value);
+    formData.append('title', document.getElementById('upload-title').value.trim());
+    formData.append('duration', document.getElementById('upload-duration').value.trim());
+    
+    const fileInput = document.getElementById('upload-pdf');
+    if (fileInput.files.length > 0) {
+      formData.append('file', fileInput.files[0]);
+    }
+
     try {
-      await NotesUpload.upload(data);
-      showUploadMsg('Notes uploaded successfully!', 'ok');
+      await NotesUpload.upload(formData);
+      showUploadMsg('PDF Notes uploaded successfully!', 'ok');
       e.target.reset();
-    } catch(err) { showUploadMsg('Upload failed: ' + err.message, 'err'); }
+    } catch(err) { 
+      showUploadMsg('Upload failed: ' + err.message, 'err'); 
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Upload PDF Notes";
+    }
   }
 
   function showAdminMsg(text, cls) {

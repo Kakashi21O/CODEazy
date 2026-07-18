@@ -71,10 +71,17 @@
     <div id="notes-view">
       <button class="back-btn" id="notes-back-btn">← Back to Topics</button>
       <div class="notes-viewer-header">
-        <h2 class="notes-viewer-title" id="nv-title"></h2>
-        <button class="complete-btn" id="complete-btn" onclick="toggleComplete()">Mark Complete</button>
+        <div>
+          <h2 class="notes-viewer-title" id="nv-title" style="margin-bottom: 8px;"></h2>
+          <a id="nv-pdf-btn" class="auth-submit" style="display:none; padding:8px 16px; font-size:13px; text-decoration:none;" target="_blank">📄 Download Original PDF</a>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <button id="nv-edit-btn" class="login" style="display:none; padding:8px 16px;">✏️ Edit</button>
+          <button id="nv-save-btn" class="auth-submit" style="display:none; padding:8px 16px; background:linear-gradient(135deg, #5bdcae, #3cb085);">💾 Save</button>
+          <button class="complete-btn" id="complete-btn" onclick="toggleComplete()">Mark Complete</button>
+        </div>
       </div>
-      <div class="notes-content" id="nv-content"></div>
+      <div class="notes-content" id="nv-content" style="padding: 24px; background: rgba(255,255,255,0.02); border-radius: 12px; outline: none;"></div>
     </div>
 
   </div>

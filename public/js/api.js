@@ -76,21 +76,28 @@ const Teachers = {
 
 // ── Admin helpers ─────────────────────────────────────────────────────────────
 const Admin = {
-  getUsers: () => apiFetch('/admin/users', {}, true),
-
-  setRole: (userId, role) =>
-    apiFetch(`/admin/users/${userId}/role`, {
-      method: 'PATCH',
-      body: JSON.stringify({ role })
-    }, true),
-
-  deleteUser: (userId) =>
-    apiFetch(`/admin/users/${userId}`, {
-      method: 'DELETE'
-    }, true),
+  getUsers:   ()                    => apiFetch('/admin/users', {}, true),
+  setRole:    (userId, role)        => apiFetch(`/admin/users/${userId}/role`, { method: 'PATCH', body: JSON.stringify({ role }) }, true),
 };
 
 // ── Notes upload ──────────────────────────────────────────────────────────────
 const NotesUpload = {
-  upload: (data) => apiFetch('/notes/upload', { method: 'POST', body: JSON.stringify(data) }, true),
+  upload: async (formData) => {
+    const token = localStorage.getItem('ce_token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    // Do NOT set Content-Type header when using FormData; the browser sets it with the correct boundary
+    const res = await fetch('/api/notes/upload', {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+    
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || data.detail || 'Upload failed');
+    return data;
+  },
+  update: (courseId, subjectId, notesHtml) => 
+    apiFetch(`/courses/${courseId}/subjects/${subjectId}`, { method: 'PUT', body: JSON.stringify({ notes: notesHtml }) }, true),
 };

@@ -1,35 +1,58 @@
 import json
-from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel
+import uuid
+import shutil
+from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from app.routers.auth import require_role
 from app.config import DATA_DIR
-from app.models import course as course_model
+import pymupdf4llm
+import markdown
 
 router = APIRouter()
 
-class NoteUpload(BaseModel):
-    courseId: str
-    title: str
-    duration: str
-    notes: str
+PDFS_DIR = DATA_DIR / "pdfs"
+PDFS_DIR.mkdir(parents=True, exist_ok=True)
 
 @router.post("/upload")
-def upload_notes(body: NoteUpload, _=Depends(require_role("teacher", "admin"))):
+async def upload_notes(
+    courseId: str = Form(...),
+    title: str = Form(...),
+    duration: str = Form(...),
+    file: UploadFile = File(...),
+    _=Depends(require_role("teacher", "admin"))
+):
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+
     courses_file = DATA_DIR / "courses.json"
     with open(courses_file, 'r', encoding='utf-8') as f:
         courses = json.load(f)
 
-    course = next((c for c in courses if c["id"] == body.courseId), None)
+    course = next((c for c in courses if c["id"] == courseId), None)
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
 
-    import uuid
+    subject_id = f"{courseId}_{uuid.uuid4().hex[:6]}"
+    pdf_path = PDFS_DIR / f"{subject_id}.pdf"
+    
+    # Save PDF
+    with open(pdf_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # Convert PDF to Markdown, then to HTML
+    try:
+        md_text = pymupdf4llm.to_markdown(str(pdf_path))
+        html_content = markdown.markdown(md_text, extensions=['fenced_code', 'tables'])
+    except Exception as e:
+        html_content = f"<p>Error extracting text: {str(e)}</p>"
+
     new_subject = {
-        "id": f"{body.courseId}_{uuid.uuid4().hex[:6]}",
-        "title": body.title,
-        "duration": body.duration,
-        "notes": body.notes
+        "id": subject_id,
+        "title": title,
+        "duration": duration,
+        "pdf_url": f"/api/pdfs/{subject_id}.pdf",
+        "notes": html_content
     }
+    
     course["subjects"].append(new_subject)
 
     with open(courses_file, 'w', encoding='utf-8') as f:
