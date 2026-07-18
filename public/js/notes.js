@@ -31,14 +31,14 @@ async function loadCompletedIfLoggedIn() {
 
 // ── View management ───────────────────────────────────────────────────────────
 function showCourseView() {
-  document.getElementById('course-view').style.display  = '';
+  document.getElementById('course-view').style.display  = 'block';
   document.getElementById('subject-view').style.display = 'none';
   document.getElementById('notes-view').style.display   = 'none';
 }
 
 function showSubjectView(courseId) {
   document.getElementById('course-view').style.display  = 'none';
-  document.getElementById('subject-view').style.display = '';
+  document.getElementById('subject-view').style.display = 'block';
   document.getElementById('notes-view').style.display   = 'none';
   loadSubjects(courseId);
 }
@@ -46,7 +46,7 @@ function showSubjectView(courseId) {
 function showNotesView() {
   document.getElementById('course-view').style.display  = 'none';
   document.getElementById('subject-view').style.display = 'none';
-  document.getElementById('notes-view').style.display   = '';
+  document.getElementById('notes-view').style.display   = 'block';
 }
 
 // ── Course grid ───────────────────────────────────────────────────────────────
@@ -171,24 +171,34 @@ document.getElementById('nv-save-btn').addEventListener('click', async () => {
 function renderNotes(text, isHtml = false) {
   if (!text) return '';
   if (isHtml) return text; // It's already converted from PDF Markdown
-  
+
   // Escape HTML
   const escape = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  // Replace ```...``` blocks
-  let html = escape(text).replace(
+  // Pull fenced code blocks OUT first and replace with placeholders, so blank
+  // lines *inside* a code block don't get caught by the paragraph splitter
+  // below (that used to break <pre><code> blocks in half).
+  const codeBlocks = [];
+  let working = escape(text).replace(
     /```(\w*)\n([\s\S]*?)```/g,
-    (_, lang, code) => `<pre><code class="lang-${lang}">${code}</code></pre>`
+    (_, lang, code) => {
+      const token = `@@CODEBLOCK_${codeBlocks.length}@@`;
+      codeBlocks.push(`<pre><code class="lang-${lang}">${code}</code></pre>`);
+      return token;
+    }
   );
 
   // Inline `code`
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  working = working.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-  // Paragraphs — split on double newline
-  html = html.split(/\n\n+/).map(p => {
-    if (p.startsWith('<pre>')) return p;
+  // Paragraphs — split on double newline (code blocks are safe placeholders now)
+  let html = working.split(/\n\n+/).map(p => {
+    if (/^@@CODEBLOCK_\d+@@$/.test(p.trim())) return p.trim();
     return p.replace(/\n/g, '<br>');
   }).join('\n\n');
+
+  // Swap the real code blocks back in
+  html = html.replace(/@@CODEBLOCK_(\d+)@@/g, (_, i) => codeBlocks[Number(i)]);
 
   return html;
 }

@@ -240,7 +240,6 @@
   color: #ccc;
   font-size: 15px;
   line-height: 1.75;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 
@@ -272,6 +271,76 @@
   background: transparent;
   color: inherit;
   padding: 0;
+}
+
+/* Headings inside PDF-converted notes.
+   pymupdf4llm turns every bold/large PDF label into <h1>/<h2>,
+   so we tone them down to look like section labels, not page titles. */
+.notes-content h1,
+.notes-content h2,
+.notes-content h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #00bfff;
+  margin: 28px 0 12px;
+  letter-spacing: -0.2px;
+}
+.notes-content h1:first-child,
+.notes-content h2:first-child,
+.notes-content h3:first-child {
+  margin-top: 0;
+}
+
+.notes-content p { margin: 0 0 14px; }
+
+.notes-content strong { color: #fff; font-weight: 600; }
+
+/* Lists */
+.notes-content ul,
+.notes-content ol {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+.notes-content li { margin-bottom: 8px; }
+.notes-content ul li::marker { color: #00bfff; }
+.notes-content ol li::marker { color: #00bfff; font-weight: 600; }
+
+/* Tables — styled like cards instead of bare browser-default grids */
+.notes-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 24px;
+  font-size: 13.5px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.notes-content thead th {
+  background: rgba(0, 191, 255, 0.12);
+  color: #00bfff;
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.notes-content tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: top;
+}
+.notes-content tbody tr:last-child td { border-bottom: none; }
+.notes-content tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+.notes-content tbody tr:hover {
+  background: rgba(0, 191, 255, 0.05);
+}
+
+/* Horizontal rule if the PDF used one to separate sections */
+.notes-content hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 24px 0;
 }
 
 /* Skeleton loader */
