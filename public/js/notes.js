@@ -128,9 +128,19 @@ async function openSubject(subjectId) {
       document.getElementById('nv-edit-btn').style.display = 'inline-block';
     }
 
-    // Render notes — if it has a pdf_url, it's HTML. Otherwise, it's old markdown.
+    // Render notes
     document.getElementById('nv-content').innerHTML = renderNotes(subject.notes, !!subject.pdf_url);
     updateCompleteBtn();
+
+    // Show PDF view toggle and load PDF viewer if a PDF is available
+    if (subject.pdf_url) {
+      document.getElementById('view-toggle').style.display = 'inline-flex';
+      switchView('pdf'); // default to PDF view
+      // Pre-load the PDF viewer in background using subject_id as pdf_id
+      PDFViewer.load('pdf-canvas-container', subject.pdf_url, subject.id);
+    } else {
+      document.getElementById('view-toggle').style.display = 'none';
+    }
   } catch (err) {
     document.getElementById('nv-content').textContent = 'Failed to load notes.';
   }
@@ -170,14 +180,9 @@ document.getElementById('nv-save-btn').addEventListener('click', async () => {
 /** Simple renderer: turns ```lang\n...\n``` blocks into <pre><code> if not pure html */
 function renderNotes(text, isHtml = false) {
   if (!text) return '';
-  if (isHtml) return text; // It's already converted from PDF Markdown
+  if (isHtml) return text;
 
-  // Escape HTML
   const escape = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-  // Pull fenced code blocks OUT first and replace with placeholders, so blank
-  // lines *inside* a code block don't get caught by the paragraph splitter
-  // below (that used to break <pre><code> blocks in half).
   const codeBlocks = [];
   let working = escape(text).replace(
     /```(\w*)\n([\s\S]*?)```/g,
@@ -187,20 +192,68 @@ function renderNotes(text, isHtml = false) {
       return token;
     }
   );
-
-  // Inline `code`
   working = working.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // Paragraphs — split on double newline (code blocks are safe placeholders now)
   let html = working.split(/\n\n+/).map(p => {
     if (/^@@CODEBLOCK_\d+@@$/.test(p.trim())) return p.trim();
     return p.replace(/\n/g, '<br>');
   }).join('\n\n');
-
-  // Swap the real code blocks back in
   html = html.replace(/@@CODEBLOCK_(\d+)@@/g, (_, i) => codeBlocks[Number(i)]);
-
   return html;
+}
+
+// ── PDF View toggle ──────────────────────────────────────────────────────────
+function switchView(mode) {
+  const htmlArea = document.getElementById('nv-content');
+  const pdfArea  = document.getElementById('pdf-viewer-area');
+  const btnHtml  = document.getElementById('toggle-html');
+  const btnPdf   = document.getElementById('toggle-pdf');
+  const suggestBtn = document.getElementById('suggest-mode-btn');
+
+  if (mode === 'pdf') {
+    htmlArea.style.display = 'none';
+    pdfArea.style.display  = 'block';
+    btnPdf.classList.add('active');
+    btnHtml.classList.remove('active');
+    // Show suggest button only to logged-in users
+    if (Auth.isLoggedIn() && suggestBtn) suggestBtn.style.display = 'inline-block';
+  } else {
+    pdfArea.style.display  = 'none';
+    htmlArea.style.display = 'block';
+    btnHtml.classList.add('active');
+    btnPdf.classList.remove('active');
+    if (suggestBtn) suggestBtn.style.display = 'none';
+    // Turn off suggest mode when leaving PDF view
+    PDFViewer.setSuggestMode(false);
+    if (suggestBtn) _resetSuggestBtn(suggestBtn);
+  }
+}
+
+let _suggestActive = false;
+function toggleSuggestMode() {
+  _suggestActive = !_suggestActive;
+  PDFViewer.setSuggestMode(_suggestActive);
+  const btn = document.getElementById('suggest-mode-btn');
+  if (_suggestActive) {
+    btn.textContent = '🔴 Stop Suggesting';
+    btn.style.background = 'rgba(0,191,255,0.15)';
+    btn.style.color = '#00bfff';
+    btn.style.borderColor = 'rgba(0,191,255,0.4)';
+  } else {
+    _resetSuggestBtn(btn);
+  }
+}
+
+function _resetSuggestBtn(btn) {
+  _suggestActive = false;
+  btn.textContent = '✏️ Suggest Edit';
+  btn.style.background = '';
+  btn.style.color = '';
+  btn.style.borderColor = '';
+}
+
+function updateZoomLabel() {
+  const label = document.getElementById('zoom-label');
+  if (label) label.textContent = Math.round(PDFViewer.getScale() * 100) + '%';
 }
 
 function updateCompleteBtn() {

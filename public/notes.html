@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="css/home_page.css">
   <link rel="stylesheet" href="css/notes.css">
+  <link rel="stylesheet" href="css/pdf_viewer.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +68,7 @@
       <div class="subject-list" id="subject-list"></div>
     </div>
 
-    <!-- ── View 3: Notes viewer ────────────────────────────────────────── -->
+      <!-- ── View 3: Notes viewer ────────────────────────────────────────── -->
     <div id="notes-view">
       <button class="back-btn" id="notes-back-btn">← Back to Topics</button>
       <div class="notes-viewer-header">
@@ -81,14 +82,39 @@
           <button class="complete-btn" id="complete-btn" onclick="toggleComplete()">Mark Complete</button>
         </div>
       </div>
+
+      <!-- View toggle: Notes HTML vs PDF Overlay -->
+      <div class="view-toggle" id="view-toggle" style="display:none;">
+        <button id="toggle-html" class="active" onclick="switchView('html')">📝 Notes</button>
+        <button id="toggle-pdf"  onclick="switchView('pdf')">📄 PDF View</button>
+      </div>
+
+      <!-- HTML Notes content -->
       <div class="notes-content" id="nv-content" style="padding: 24px; background: rgba(255,255,255,0.02); border-radius: 12px; outline: none;"></div>
+
+      <!-- PDF viewer toolbar + canvas pages -->
+      <div id="pdf-viewer-area" style="display:none;">
+        <div class="pdf-toolbar">
+          <button onclick="PDFViewer.setScale(PDFViewer.getScale() - 0.25); updateZoomLabel()">−</button>
+          <span class="zoom-label" id="zoom-label">150%</span>
+          <button onclick="PDFViewer.setScale(PDFViewer.getScale() + 0.25); updateZoomLabel()">+</button>
+          <button onclick="PDFViewer.setScale(1.5); updateZoomLabel()">Reset</button>
+          <button id="suggest-mode-btn" onclick="toggleSuggestMode()" style="display:none; margin-left:auto;">✏️ Suggest Edit</button>
+        </div>
+        <div class="pdf-viewer-wrap">
+          <div id="pdf-canvas-container"></div>
+        </div>
+      </div>
     </div>
 
   </div>
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <script src="js/api.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/pdf_viewer.js"></script>
 <script src="js/notes.js"></script>
 <script>
   // Show Add Notes button for teacher/admin

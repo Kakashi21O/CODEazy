@@ -1,0 +1,271 @@
+/* public/css/pdf_viewer.css */
+
+/* ── PDF Viewer Wrapper ─────────────────────────────────────────────────────── */
+.pdf-viewer-wrap {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  background: #111;
+}
+
+/* Each page container: stacks canvas + overlay */
+.pdf-page-container {
+  position: relative;
+  display: block;
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff; /* PDF background is usually white */
+}
+
+/* The actual rendered PDF page */
+.pdf-page-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Transparent overlay — sits exactly on top of canvas */
+.pdf-text-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; /* pass clicks through by default */
+}
+
+/* Individual text block spans on the overlay */
+.pdf-text-block {
+  position: absolute;
+  pointer-events: auto;
+  cursor: default;
+  color: transparent;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  line-height: 1;
+  white-space: pre;
+  box-sizing: border-box;
+  border-radius: 2px;
+  transition: background 0.15s;
+  overflow: visible; /* allow pending badge above */
+}
+
+/* Subtle highlight on hover so user knows text is selectable */
+.pdf-text-block:hover {
+  background: rgba(0, 191, 255, 0.08);
+  color: transparent;
+}
+
+/* ── Toolbar ────────────────────────────────────────────────────────────────── */
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.pdf-toolbar button,
+.pdf-toolbar a {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #ccc;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-family: Inter, sans-serif;
+}
+
+.pdf-toolbar button:hover,
+.pdf-toolbar a:hover {
+  background: rgba(0,191,255,0.12);
+  border-color: rgba(0,191,255,0.3);
+  color: #00bfff;
+}
+
+.pdf-toolbar .zoom-label {
+  font-size: 13px;
+  color: #666;
+  min-width: 44px;
+  text-align: center;
+}
+
+/* ── View Toggle ────────────────────────────────────────────────────────────── */
+.view-toggle {
+  display: inline-flex;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.view-toggle button {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-toggle button.active {
+  background: rgba(0,191,255,0.12);
+  color: #00bfff;
+}
+
+/* ── Loading state ──────────────────────────────────────────────────────────── */
+.pdf-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* ── Pending block highlight ─────────────────────────────────────────────────── */
+.pdf-block-pending {
+  background: rgba(91, 220, 174, 0.12) !important;
+  border: 1px dashed rgba(91, 220, 174, 0.5) !important;
+  border-radius: 3px;
+}
+
+.pending-badge {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: #5bdcae;
+  color: #111;
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: Inter, sans-serif;
+}
+
+/* ── Suggest Popover ────────────────────────────────────────────────────────── */
+.suggest-popover {
+  position: absolute;
+  z-index: 100;
+  width: 320px;
+  background: #1a1c1e;
+  border: 1px solid rgba(0,191,255,0.25);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  font-family: Inter, sans-serif;
+}
+
+.suggest-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #00bfff;
+}
+
+.suggest-close {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.suggest-close:hover { color: #fff; }
+
+.suggest-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.suggest-original {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.suggest-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #ddd;
+  font-family: Inter, sans-serif;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.suggest-input:focus {
+  outline: none;
+  border-color: rgba(0,191,255,0.4);
+}
+
+.suggest-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.suggest-cancel, .suggest-submit {
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: Inter, sans-serif;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.suggest-cancel {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+  color: #888;
+}
+.suggest-cancel:hover { color: #fff; }
+
+.suggest-submit {
+  background: linear-gradient(135deg, #00bfff, #0080cc);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+.suggest-submit:hover { opacity: 0.9; }
+.suggest-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.suggest-msg {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ff8080;
+}
+

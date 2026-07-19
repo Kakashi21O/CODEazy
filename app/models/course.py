@@ -11,6 +11,10 @@ def read_all() -> List[Dict[str, Any]]:
     with open(FILE_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
 
+def write_all(courses: List[Dict[str, Any]]):
+    with open(FILE_PATH, 'w', encoding='utf-8') as f:
+        json.dump(courses, f, indent=2, ensure_ascii=False)
+
 def find_all() -> List[Dict[str, Any]]:
     courses = read_all()
     result = []

@@ -6,6 +6,7 @@ from app.routers.auth import require_role
 from app.config import DATA_DIR
 import pymupdf4llm
 import markdown
+from app.services.pdf_extractor import extract_and_save_blocks
 
 router = APIRouter()
 
@@ -38,10 +39,9 @@ async def upload_notes(
     with open(pdf_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Convert PDF to Markdown, then to HTML
+    # Extract and save text blocks for the new editable overlay system, recovering high-fidelity HTML
     try:
-        md_text = pymupdf4llm.to_markdown(str(pdf_path))
-        html_content = markdown.markdown(md_text, extensions=['fenced_code', 'tables'])
+        _, html_content = extract_and_save_blocks(pdf_id=subject_id, pdf_path=str(pdf_path))
     except Exception as e:
         html_content = f"<p>Error extracting text: {str(e)}</p>"
 
