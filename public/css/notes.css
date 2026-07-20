@@ -201,6 +201,36 @@
 .notes-viewer-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  margin-bottom: 22px;
+  padding: 20px 24px;
+
+  background: rgba(255,255,255,0.03);
+
+  /* Bright blue border */
+  border: 2px solid #00bfff;
+  border-radius: 16px;
+
+  /* Crisp glow */
+  box-shadow:
+      0 0 4px rgba(0,191,255,.35),
+      0 0 10px rgba(0,191,255,.15);
+
+  transition: .25s ease;
+}
+
+.notes-viewer-header:hover {
+  box-shadow:
+      0 0 6px rgba(0,191,255,.45),
+      0 0 14px rgba(0,191,255,.22);
+}
+
+.notes-viewer-header {
+  display: flex;
+  align-items: center;
   gap: 16px;
   margin-bottom: 28px;
   flex-wrap: wrap;
@@ -214,7 +244,7 @@
 .notes-viewer-title {
   font-size: 24px;
   font-weight: 700;
-  color: white;
+  color: #00bfff;
   margin: 0;
 }
 
