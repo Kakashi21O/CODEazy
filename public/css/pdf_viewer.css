@@ -6,6 +6,10 @@
   width: 100%;
   margin: 0 auto;
   background: #111;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Each page container: stacks canvas + overlay */
@@ -22,8 +26,10 @@
 /* The actual rendered PDF page */
 .pdf-page-canvas {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
+  margin: 0 auto;
 }
 
 /* Transparent overlay — sits exactly on top of canvas */
