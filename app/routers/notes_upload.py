@@ -4,8 +4,6 @@ import shutil
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from app.routers.auth import require_role
 from app.config import DATA_DIR
-import pymupdf4llm
-import markdown
 from app.services.pdf_extractor import extract_and_save_blocks
 
 router = APIRouter()

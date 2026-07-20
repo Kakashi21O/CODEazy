@@ -274,7 +274,7 @@
 }
 
 /* Headings inside PDF-converted notes.
-   pymupdf4llm turns every bold/large PDF label into <h1>/<h2>,
+   PDF extraction turns every bold/large label into <h1>/<h2>,
    so we tone them down to look like section labels, not page titles. */
 .notes-content h1,
 .notes-content h2,

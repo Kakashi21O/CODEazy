@@ -1,6 +1,0 @@
-fix ui of admin panal
-show differnt to teacher in place of admin panal
-adding pdf and other to be uploading 
-
-
-1. u can see clicking string show to c hange example miss pacing edits  2.in tables usably wrong spacing aur extra spaces  on change in table no change work of out table aur examples aur texts working 3.dowload pdf button ui 4. waht is the work of save and mark completed

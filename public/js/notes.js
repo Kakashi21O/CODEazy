@@ -100,7 +100,6 @@ async function loadSubjects(courseId) {
 }
 
 // ── Notes viewer ──────────────────────────────────────────────────────────────
-// ── Notes viewer ──────────────────────────────────────────────────────────────
 async function openSubject(subjectId) {
   currentSubjectId = subjectId;
   showNotesView();
@@ -207,48 +206,18 @@ function switchView(mode) {
   const pdfArea  = document.getElementById('pdf-viewer-area');
   const btnHtml  = document.getElementById('toggle-html');
   const btnPdf   = document.getElementById('toggle-pdf');
-  const suggestBtn = document.getElementById('suggest-mode-btn');
 
   if (mode === 'pdf') {
     htmlArea.style.display = 'none';
     pdfArea.style.display  = 'block';
     btnPdf.classList.add('active');
     btnHtml.classList.remove('active');
-    // Show suggest button only to logged-in users
-    if (Auth.isLoggedIn() && suggestBtn) suggestBtn.style.display = 'inline-block';
   } else {
     pdfArea.style.display  = 'none';
     htmlArea.style.display = 'block';
     btnHtml.classList.add('active');
     btnPdf.classList.remove('active');
-    if (suggestBtn) suggestBtn.style.display = 'none';
-    // Turn off suggest mode when leaving PDF view
-    PDFViewer.setSuggestMode(false);
-    if (suggestBtn) _resetSuggestBtn(suggestBtn);
   }
-}
-
-let _suggestActive = false;
-function toggleSuggestMode() {
-  _suggestActive = !_suggestActive;
-  PDFViewer.setSuggestMode(_suggestActive);
-  const btn = document.getElementById('suggest-mode-btn');
-  if (_suggestActive) {
-    btn.textContent = '🔴 Stop Suggesting';
-    btn.style.background = 'rgba(0,191,255,0.15)';
-    btn.style.color = '#00bfff';
-    btn.style.borderColor = 'rgba(0,191,255,0.4)';
-  } else {
-    _resetSuggestBtn(btn);
-  }
-}
-
-function _resetSuggestBtn(btn) {
-  _suggestActive = false;
-  btn.textContent = '✏️ Suggest Edit';
-  btn.style.background = '';
-  btn.style.color = '';
-  btn.style.borderColor = '';
 }
 
 function updateZoomLabel() {

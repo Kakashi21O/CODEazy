@@ -78,6 +78,7 @@ const Teachers = {
 const Admin = {
   getUsers:   ()                    => apiFetch('/admin/users', {}, true),
   setRole:    (userId, role)        => apiFetch(`/admin/users/${userId}/role`, { method: 'PATCH', body: JSON.stringify({ role }) }, true),
+  deleteUser: (userId)              => apiFetch(`/admin/users/${userId}`, { method: 'DELETE' }, true),
 };
 
 // ── Notes upload ──────────────────────────────────────────────────────────────

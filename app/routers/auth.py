@@ -8,8 +8,6 @@ from app.models import user as user_model
 
 router = APIRouter()
 
-VALID_ROLES = {"student", "teacher", "admin"}
-
 class RegisterRequest(BaseModel):
     name: str
     email: EmailStr

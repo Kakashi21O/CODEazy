@@ -32,8 +32,8 @@ def run_ocr_on_pdf(pdf_id: str, pdf_path: str) -> list[dict]:
     doc = fitz.open(pdf_path)
 
     for page_num, page in enumerate(doc):
-        # Render page to image at 200 DPI for good accuracy
-        mat = fitz.Matrix(200 / 72, 200 / 72)
+        # Render page to image at 400 DPI for good accuracy
+        mat = fitz.Matrix(400 / 72, 400 / 72)
         pix = page.get_pixmap(matrix=mat, alpha=False)
         img_bytes = pix.tobytes("png")
         img = Image.open(io.BytesIO(img_bytes))
