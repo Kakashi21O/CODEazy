@@ -200,17 +200,22 @@
 
 .notes-viewer-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  justify-content: space-between;
 }
 
 .notes-viewer-title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   color: white;
-  flex: 1;
+  margin: 0;
 }
 
 .complete-btn {
@@ -233,14 +238,29 @@
 .complete-btn.done { border-color: #5bdcae; }
 
 .notes-content {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 16px;
-  padding: 32px;
+  padding: 36px 40px;
   color: #ccc;
   font-size: 15px;
-  line-height: 1.75;
+  line-height: 1.8;
   word-break: break-word;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  min-height: 200px;
+  outline: none;
+}
+
+/* Teacher edit mode — subtle glow when editable */
+.notes-content[contenteditable="true"] {
+  border-color: rgba(0,191,255,0.25);
+  box-shadow: 0 0 0 3px rgba(0,191,255,0.06);
+  cursor: text;
+}
+
+.notes-content[contenteditable="true"]:focus {
+  border-color: rgba(0,191,255,0.45);
+  box-shadow: 0 0 0 4px rgba(0,191,255,0.1);
 }
 
 /* Code blocks inside notes */

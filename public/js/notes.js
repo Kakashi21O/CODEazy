@@ -3,23 +3,48 @@
 
 let currentCourseId  = null;
 let currentSubjectId = null;
-let completedSet     = {}; // local cache of completed subject IDs
+let completedSet     = {};
+let saveTimeout      = null;
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+  showCourseView(); // hide all views except course grid on load
+
   await loadCompletedIfLoggedIn();
   await loadCourses();
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const courseParam = urlParams.get('course');
-  if (courseParam) {
-    showSubjectView(courseParam);
-  }
+  const courseParam = new URLSearchParams(window.location.search).get('course');
+  if (courseParam) showSubjectView(courseParam);
 
   document.getElementById('notes-back-btn').addEventListener('click', () => {
     showSubjectView(currentCourseId);
   });
+
+  // Auto-save on input — only teachers/admins have contentEditable=true so students can't trigger this
+  document.getElementById('nv-content').addEventListener('input', () => {
+    showSaveStatus('Saving…', '#aaa', 'rgba(255,255,255,0.08)');
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(async () => {
+      try {
+        await NotesUpload.update(currentCourseId, currentSubjectId, document.getElementById('nv-content').innerHTML);
+        showSaveStatus('✓ Saved', '#5bdcae', 'rgba(91,220,174,0.12)', 2500);
+      } catch {
+        showSaveStatus('✗ Save failed', '#ff8080', 'rgba(255,128,128,0.12)');
+      }
+    }, 1000);
+  });
+
 });
+
+function showSaveStatus(text, color, bg, autohideMs = 0) {
+  const el = document.getElementById('nv-save-status');
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = color;
+  el.style.background = bg;
+  el.style.display = 'inline-block';
+  if (autohideMs) setTimeout(() => { el.style.display = 'none'; }, autohideMs);
+}
 
 async function loadCompletedIfLoggedIn() {
   if (!Auth.isLoggedIn()) return;
@@ -65,7 +90,7 @@ async function loadCourses() {
         </div>
       </div>
     `).join('');
-  } catch (err) {
+  } catch {
     grid.innerHTML = `<p style="color:#ff8080">Failed to load courses. Is the server running?</p>`;
   }
 }
@@ -77,7 +102,7 @@ async function loadSubjects(courseId) {
   list.innerHTML = '<div class="skeleton" style="height:70px;border-radius:12px;"></div>'.repeat(5);
 
   try {
-    const course   = await Courses.getById(courseId);
+    const course = await Courses.getById(courseId);
     document.getElementById('sv-title').textContent = course.title;
     document.getElementById('sv-desc').textContent  = course.description;
 
@@ -94,7 +119,7 @@ async function loadSubjects(courseId) {
         </div>
       `;
     }).join('');
-  } catch (err) {
+  } catch {
     list.innerHTML = `<p style="color:#ff8080">Failed to load topics.</p>`;
   }
 }
@@ -104,13 +129,16 @@ async function openSubject(subjectId) {
   currentSubjectId = subjectId;
   showNotesView();
 
-  document.getElementById('nv-title').textContent   = 'Loading…';
-  document.getElementById('nv-content').textContent = '';
+  const content    = document.getElementById('nv-content');
+  const saveStatus = document.getElementById('nv-save-status');
+
+  // Reset
+  document.getElementById('nv-title').textContent = 'Loading…';
   document.getElementById('nv-pdf-btn').style.display = 'none';
-  document.getElementById('nv-edit-btn').style.display = 'none';
-  document.getElementById('nv-save-btn').style.display = 'none';
-  document.getElementById('nv-content').contentEditable = "false";
-  document.getElementById('nv-content').style.outline = "none";
+  document.getElementById('view-toggle').style.display = 'none';
+  content.innerHTML = '';
+  content.contentEditable = 'false';
+  if (saveStatus) saveStatus.style.display = 'none';
 
   try {
     const subject = await Courses.getSubject(subjectId);
@@ -122,85 +150,48 @@ async function openSubject(subjectId) {
       pdfBtn.style.display = 'inline-block';
     }
 
-    const u = Auth.getUser();
-    if (u && (u.role === 'teacher' || u.role === 'admin')) {
-      document.getElementById('nv-edit-btn').style.display = 'inline-block';
-    }
-
-    // Render notes
-    document.getElementById('nv-content').innerHTML = renderNotes(subject.notes, !!subject.pdf_url);
+    // Render content first
+    content.innerHTML = renderNotes(subject.notes, !!subject.pdf_url);
     updateCompleteBtn();
 
-    // Show PDF view toggle and load PDF viewer if a PDF is available
+    // Set edit permissions
+    const u = Auth.getUser();
+    const isEditor = u && (u.role === 'teacher' || u.role === 'admin');
+    content.contentEditable = isEditor ? 'true' : 'false';
+
+    // PDF toggle
     if (subject.pdf_url) {
       document.getElementById('view-toggle').style.display = 'inline-flex';
-      switchView('pdf'); // default to PDF view
-      // Pre-load the PDF viewer in background using subject_id as pdf_id
+      switchView('pdf');
       PDFViewer.load('pdf-canvas-container', subject.pdf_url, subject.id);
-    } else {
-      document.getElementById('view-toggle').style.display = 'none';
     }
   } catch (err) {
-    document.getElementById('nv-content').textContent = 'Failed to load notes.';
+    content.textContent = 'Failed to load notes.';
+    console.error(err);
   }
 }
 
-document.getElementById('nv-edit-btn').addEventListener('click', () => {
-  const content = document.getElementById('nv-content');
-  content.contentEditable = "true";
-  content.focus();
-  content.style.outline = "2px solid #00bfff";
-  document.getElementById('nv-edit-btn').style.display = 'none';
-  document.getElementById('nv-save-btn').style.display = 'inline-block';
-});
-
-document.getElementById('nv-save-btn').addEventListener('click', async () => {
-  const content = document.getElementById('nv-content');
-  const btn = document.getElementById('nv-save-btn');
-  const html = content.innerHTML;
-  
-  btn.textContent = "Saving...";
-  btn.disabled = true;
-  
-  try {
-    await NotesUpload.update(currentCourseId, currentSubjectId, html);
-    content.contentEditable = "false";
-    content.style.outline = "none";
-    document.getElementById('nv-edit-btn').style.display = 'inline-block';
-    document.getElementById('nv-save-btn').style.display = 'none';
-  } catch(e) {
-    alert("Failed to save notes: " + e.message);
-  } finally {
-    btn.textContent = "💾 Save";
-    btn.disabled = false;
-  }
-});
-
-/** Simple renderer: turns ```lang\n...\n``` blocks into <pre><code> if not pure html */
+// ── Notes renderer ────────────────────────────────────────────────────────────
 function renderNotes(text, isHtml = false) {
   if (!text) return '';
   if (isHtml) return text;
 
   const escape = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const codeBlocks = [];
-  let working = escape(text).replace(
-    /```(\w*)\n([\s\S]*?)```/g,
-    (_, lang, code) => {
-      const token = `@@CODEBLOCK_${codeBlocks.length}@@`;
-      codeBlocks.push(`<pre><code class="lang-${lang}">${code}</code></pre>`);
-      return token;
-    }
-  );
+  let working = escape(text).replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+    const token = `@@CODE${codeBlocks.length}@@`;
+    codeBlocks.push(`<pre><code class="lang-${lang}">${code}</code></pre>`);
+    return token;
+  });
   working = working.replace(/`([^`]+)`/g, '<code>$1</code>');
-  let html = working.split(/\n\n+/).map(p => {
-    if (/^@@CODEBLOCK_\d+@@$/.test(p.trim())) return p.trim();
-    return p.replace(/\n/g, '<br>');
-  }).join('\n\n');
-  html = html.replace(/@@CODEBLOCK_(\d+)@@/g, (_, i) => codeBlocks[Number(i)]);
+  let html = working.split(/\n\n+/).map(p =>
+    /^@@CODE\d+@@$/.test(p.trim()) ? p.trim() : p.replace(/\n/g, '<br>')
+  ).join('\n\n');
+  html = html.replace(/@@CODE(\d+)@@/g, (_, i) => codeBlocks[Number(i)]);
   return html;
 }
 
-// ── PDF View toggle ──────────────────────────────────────────────────────────
+// ── PDF View toggle ───────────────────────────────────────────────────────────
 function switchView(mode) {
   const htmlArea = document.getElementById('nv-content');
   const pdfArea  = document.getElementById('pdf-viewer-area');
@@ -225,6 +216,7 @@ function updateZoomLabel() {
   if (label) label.textContent = Math.round(PDFViewer.getScale() * 100) + '%';
 }
 
+// ── Complete tracking ─────────────────────────────────────────────────────────
 function updateCompleteBtn() {
   const btn  = document.getElementById('complete-btn');
   const done = !!completedSet[currentSubjectId];
@@ -238,10 +230,7 @@ function updateCompleteBtn() {
 }
 
 async function toggleComplete() {
-  if (!Auth.isLoggedIn()) {
-    window.location.href = '/login.html';
-    return;
-  }
+  if (!Auth.isLoggedIn()) { window.location.href = '/login.html'; return; }
   const done = !!completedSet[currentSubjectId];
   try {
     if (done) {
@@ -252,13 +241,12 @@ async function toggleComplete() {
       completedSet[currentSubjectId] = { completedAt: new Date().toISOString() };
     }
     updateCompleteBtn();
-    // Also refresh the subject item's completed class if it's still in DOM
     const item = document.getElementById(`si-${currentSubjectId}`);
     if (item) {
       item.classList.toggle('completed', !done);
       item.querySelector('.subject-check').textContent = !done ? '✓' : '';
     }
-  } catch (err) {
+  } catch {
     alert('Could not update progress. Please try again.');
   }
 }
