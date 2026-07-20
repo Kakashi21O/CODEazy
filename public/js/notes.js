@@ -147,7 +147,7 @@ async function openSubject(subjectId) {
     if (subject.pdf_url) {
       const pdfBtn = document.getElementById('nv-pdf-btn');
       pdfBtn.href = subject.pdf_url;
-      pdfBtn.style.display = 'inline-block';
+      pdfBtn.style.display = 'flex';
     }
 
     // Render content first

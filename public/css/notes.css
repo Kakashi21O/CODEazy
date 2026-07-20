@@ -380,3 +380,53 @@
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+
+/* ──────────────────────────────────────────────────────────── */
+/* Floating PDF Download Button */
+/* ──────────────────────────────────────────────────────────── */
+
+.pdf-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+
+    width: 70px;
+    height: 70px;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    /* Same style as Mark Complete */
+    background: rgba(91, 220, 174, 0.12);
+    border: 2px solid #5bdcae;
+
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+
+    text-decoration: none;
+    z-index: 9999;
+
+    opacity: .45;
+    transition: all .25s ease;
+}
+
+.pdf-fab:hover {
+    background: #5bdcae;
+    opacity: 1;
+    transform: scale(1.08);
+    box-shadow: 0 12px 32px rgba(91,220,174,.35);
+}
+
+.pdf-fab img {
+    width: 40px;
+    height: 40px;
+
+    object-fit: contain;
+    display: block;
+
+    /* Makes the black icon turn white on hover */
+    transition: filter .25s ease;
+}
