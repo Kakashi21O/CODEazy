@@ -2,6 +2,30 @@
 // Shared nav state — call initNav() on every page to update header based on auth state.
 
 function initNav() {
+  const header = document.querySelector('header');
+  if (header) {
+    let path = window.location.pathname.split('/').pop() || 'home.html';
+    if (path === '') path = 'home.html';
+    const isActive = (page) => path === page ? 'active-nav-link' : '';
+
+    header.innerHTML = `
+      <a href="home.html" class="logo">
+        <img src="images/logo.png" alt="CODEazy Logo">
+      </a>
+      <nav>
+        <a href="home.html" class="${isActive('home.html')}">Home</a>
+        <a href="notes.html" class="${isActive('notes.html')}">Notes</a>
+        <a href="teachers.html" class="${isActive('teachers.html')}">Teachers</a>
+        <a href="about.html" class="${isActive('about.html')}">About</a>
+      </nav>
+      <a href="login.html" id="nav-login-btn" class="login">Login</a>
+      <div id="nav-user-menu" style="display:none; align-items:center; gap:16px;">
+        <a href="dashboard.html" class="login" style="padding:10px 24px;">👤 <span id="nav-user-name"></span></a>
+        <button id="nav-logout-btn" class="login" style="border:none;cursor:pointer;background:rgba(255,80,80,.12);color:#ff8080;padding:10px 20px;">Logout</button>
+      </div>
+    `;
+  }
+
   const loginBtn = document.getElementById('nav-login-btn');
   const userMenu = document.getElementById('nav-user-menu');
 
@@ -30,9 +54,9 @@ function initNav() {
               </div>
             </div>
             <div class="nav-dropdown-divider"></div>
-            <a href="/dashboard.html" class="nav-dropdown-item">📊 Dashboard</a>
-            <a href="/settings.html" class="nav-dropdown-item">⚙️ Settings</a>
-            ${role === 'admin' || role === 'teacher' ? '<a href="/admin.html" class="nav-dropdown-item">🛡️ Admin Panel</a>' : ''}
+            <a href="dashboard.html" class="nav-dropdown-item">📊 Dashboard</a>
+            <a href="settings.html" class="nav-dropdown-item">⚙️ Settings</a>
+            ${role === 'admin' || role === 'teacher' ? '<a href="admin.html" class="nav-dropdown-item">🛡️ Admin Panel</a>' : ''}
             <div class="nav-dropdown-divider"></div>
             <button class="nav-dropdown-item nav-dropdown-logout" id="nav-logout-btn">🚪 Logout</button>
           </div>
@@ -54,7 +78,7 @@ function initNav() {
       // Logout
       document.getElementById('nav-logout-btn').addEventListener('click', () => {
         Auth.clearSession();
-        window.location.href = '/home.html';
+        window.location.href = 'home.html';
       });
     }
 
