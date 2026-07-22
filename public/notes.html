@@ -60,6 +60,9 @@
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
           <span id="nv-save-status" style="display:none; font-size:12px; padding:4px 12px; border-radius:999px; background:rgba(91,220,174,0.12); color:#5bdcae;"></span>
+          <button class="complete-btn" id="edit-btn" onclick="toggleEditMode()" style="display:none; background:var(--bg-surface); border:1px solid var(--border-color); color:var(--text-primary);">Edit</button>
+          <button class="complete-btn" id="save-btn" onclick="saveNotes()" style="display:none; background:var(--state-success); color:#fff;">Save</button>
+          <button class="complete-btn" id="submit-suggestion-btn" onclick="submitSuggestion()" style="display:none; background:var(--state-warning); color:#fff;">Submit Suggestion</button>
           <button class="complete-btn" id="complete-btn" onclick="toggleComplete()">Mark Complete</button>
         </div>
       </div>
@@ -89,6 +92,7 @@
 
   </div>
 </main>
+<a id="nv-review-btn" class="pdf-fab" style="display:none; background-color:var(--state-warning); right: 114px; justify-content:center; align-items:center; color:#fff; font-size:20px; font-weight:bold; cursor:pointer;" title="Review Suggestions" onclick="window.location='suggestions.html'">★</a>
 <a id="nv-pdf-btn" class="pdf-fab" target="_blank" title="Download Original PDF"><img src="/file_download_logo.png" alt="Download"></a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -103,6 +107,7 @@
     const u = Auth.getUser();
     if (u && (u.role === 'teacher' || u.role === 'admin')) {
       document.getElementById('add-notes-btn').style.display = 'inline-flex';
+      document.getElementById('nv-review-btn').style.display = 'flex';
     }
   });
 </script>
