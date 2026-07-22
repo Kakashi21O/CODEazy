@@ -7,7 +7,10 @@ const PDFViewer = (() => {
   let _container = null;
   let _blocks    = [];
 
+  let _subjectId = null;
+
   async function load(containerId, pdfUrl, subjectId) {
+    _subjectId = subjectId;
     _container = document.getElementById(containerId);
     if (!_container) return;
     _container.innerHTML = '<div class="pdf-loading">Loading PDF…</div>';
@@ -76,7 +79,6 @@ const PDFViewer = (() => {
   function _placeBlocks(overlay, pageIndex, viewport) {
     const pageBlocks = _blocks.filter(b => b.page === pageIndex);
     const u = Auth.getUser();
-    const isTeacher = u && (u.role === 'teacher' || u.role === 'admin');
 
     pageBlocks.forEach(b => {
       const span = document.createElement('span');
@@ -91,16 +93,16 @@ const PDFViewer = (() => {
       span.style.height   = (b.height * _scale) + 'px';
       span.style.fontSize = (b.font_size * _scale) + 'px';
 
-      if (isTeacher) {
+      if (u && u.role !== 'student') {
         span.style.cursor = 'text';
-        span.addEventListener('click', () => _openDirectEdit(span, b));
+        span.addEventListener('click', () => _openDirectEdit(span, b, u));
       }
 
       overlay.appendChild(span);
     });
   }
 
-  function _openDirectEdit(span, block) {
+  function _openDirectEdit(span, block, u) {
     if (span.isEditing) return;
 
     span.isEditing = true;
@@ -143,15 +145,45 @@ const PDFViewer = (() => {
 
       try {
         const token = localStorage.getItem('ce_token');
-        const res = await fetch(`/api/blocks/${block.id}`, {
-          method: 'PUT',
+        const isStudent = u && u.role === 'student';
+        
+        let url, method, body;
+        
+        if (isStudent) {
+          url = '/api/suggestions';
+          method = 'POST';
+          body = JSON.stringify({
+            course_id: window.currentCourseId,
+            subject_id: _subjectId,
+            pdf_id: block.pdf_id,
+            blocks: [{
+              block_id: block.id,
+              original_text: block.text,
+              replacement_text: newText
+            }]
+          });
+        } else {
+          url = `/api/blocks/${block.id}`;
+          method = 'PUT';
+          body = JSON.stringify({ new_text: newText });
+        }
+        
+        const res = await fetch(url, {
+          method,
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({ new_text: newText }),
+          body,
         });
+        
         if (!res.ok) throw new Error('Failed to update block');
 
-        block.text = newText;
-        span.dataset.text = newText;
+        if (!isStudent) {
+          block.text = newText;
+          span.dataset.text = newText;
+        } else {
+          // For students, revert to old text visually but show a success hint
+          span.textContent = block.text;
+          showSaveStatus('✓ Suggestion Submitted', '#f59e0b', 'rgba(245,158,11,0.12)', 3000);
+        }
         span.style.background = '';
       } catch (e) {
         alert('Failed to save: ' + e.message);

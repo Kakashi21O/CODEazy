@@ -20,19 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     showSubjectView(currentCourseId);
   });
 
-  // Auto-save on input — only teachers/admins have contentEditable=true so students can't trigger this
-  document.getElementById('nv-content').addEventListener('input', () => {
-    showSaveStatus('Saving…', '#aaa', 'rgba(255,255,255,0.08)');
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(async () => {
-      try {
-        await NotesUpload.update(currentCourseId, currentSubjectId, document.getElementById('nv-content').innerHTML);
-        showSaveStatus('✓ Saved', '#5bdcae', 'rgba(91,220,174,0.12)', 2500);
-      } catch {
-        showSaveStatus('✗ Save failed', '#ff8080', 'rgba(255,128,128,0.12)');
-      }
-    }, 1000);
-  });
+  // Auto-save removed in favor of explicit edit/save mode
 
 });
 
@@ -139,6 +127,15 @@ async function openSubject(subjectId) {
   content.innerHTML = '';
   content.contentEditable = 'false';
   if (saveStatus) saveStatus.style.display = 'none';
+  
+  // Reset buttons
+  document.getElementById('edit-btn').style.display = Auth.isLoggedIn() ? 'inline-block' : 'none';
+  document.getElementById('save-btn').style.display = 'none';
+  document.getElementById('submit-suggestion-btn').style.display = 'none';
+  
+  // PDF viewer will also rely on this state
+  window.isEditMode = false;
+  document.getElementById('edit-btn').textContent = 'Edit';
 
   try {
     const subject = await Courses.getSubject(subjectId);
@@ -154,10 +151,11 @@ async function openSubject(subjectId) {
     content.innerHTML = renderNotes(subject.notes, !!subject.pdf_url);
     updateCompleteBtn();
 
-    // Set edit permissions
-    const u = Auth.getUser();
-    const isEditor = u && (u.role === 'teacher' || u.role === 'admin');
-    content.contentEditable = isEditor ? 'true' : 'false';
+    // Save original HTML for suggestions comparison
+    window.originalHtmlNotes = content.innerHTML;
+    
+    // Edit mode is toggled via button now
+    content.contentEditable = 'false';
 
     // PDF toggle
     if (subject.pdf_url) {
@@ -203,11 +201,22 @@ function switchView(mode) {
     pdfArea.style.display  = 'block';
     btnPdf.classList.add('active');
     btnHtml.classList.remove('active');
+    
+    // Hide HTML edit buttons in PDF view
+    document.getElementById('edit-btn').style.display = 'none';
+    document.getElementById('save-btn').style.display = 'none';
+    document.getElementById('submit-suggestion-btn').style.display = 'none';
+    
+    // If we were in edit mode, cancel it
+    if (window.isEditMode) toggleEditMode();
   } else {
     pdfArea.style.display  = 'none';
     htmlArea.style.display = 'block';
     btnHtml.classList.add('active');
     btnPdf.classList.remove('active');
+    
+    // Show Edit button if logged in
+    document.getElementById('edit-btn').style.display = Auth.isLoggedIn() ? 'inline-block' : 'none';
   }
 }
 
@@ -248,5 +257,126 @@ async function toggleComplete() {
     }
   } catch {
     alert('Could not update progress. Please try again.');
+  }
+}
+
+// ── Edit Mode & Suggestions ───────────────────────────────────────────────────
+
+function toggleEditMode() {
+  const btn = document.getElementById('edit-btn');
+  const content = document.getElementById('nv-content');
+  const u = Auth.getUser();
+  const isEditor = u && (u.role === 'teacher' || u.role === 'admin');
+  
+  window.isEditMode = !window.isEditMode;
+  
+  if (window.isEditMode) {
+    btn.textContent = 'Cancel Edit';
+    content.contentEditable = 'true';
+    if (isEditor) {
+      document.getElementById('save-btn').style.display = 'inline-block';
+    } else {
+      document.getElementById('submit-suggestion-btn').style.display = 'inline-block';
+    }
+    content.focus();
+  } else {
+    btn.textContent = 'Edit';
+    content.contentEditable = 'false';
+    document.getElementById('save-btn').style.display = 'none';
+    document.getElementById('submit-suggestion-btn').style.display = 'none';
+    
+    // Restore original if canceled
+    content.innerHTML = window.originalHtmlNotes || '';
+  }
+}
+
+async function saveNotes() {
+  const content = document.getElementById('nv-content');
+  showSaveStatus('Saving…', '#aaa', 'rgba(255,255,255,0.08)');
+  try {
+    await NotesUpload.update(currentCourseId, currentSubjectId, content.innerHTML);
+    showSaveStatus('✓ Saved', '#5bdcae', 'rgba(91,220,174,0.12)', 2500);
+    window.originalHtmlNotes = content.innerHTML;
+    toggleEditMode(); // Exit edit mode
+  } catch {
+    showSaveStatus('✗ Save failed', '#ff8080', 'rgba(255,128,128,0.12)');
+  }
+}
+
+async function submitSuggestion() {
+  const content = document.getElementById('nv-content');
+  const oldHtml = window.originalHtmlNotes || '';
+  const newHtml = content.innerHTML;
+  
+  // Split into paragraphs for diffing
+  const oldDiv = document.createElement('div');
+  oldDiv.innerHTML = oldHtml;
+  const newDiv = document.createElement('div');
+  newDiv.innerHTML = newHtml;
+  
+  const oldBlocks = Array.from(oldDiv.children).map(c => c.outerHTML || c.textContent).filter(Boolean);
+  const newBlocks = Array.from(newDiv.children).map(c => c.outerHTML || c.textContent).filter(Boolean);
+  
+  // Merge contiguous block changes
+  const blocks = [];
+  let currentBlock = null;
+  const maxLen = Math.max(oldBlocks.length, newBlocks.length);
+  for (let i = 0; i < maxLen; i++) {
+    const o = oldBlocks[i] || '';
+    const n = newBlocks[i] || '';
+    if (o.trim() !== n.trim()) {
+      if (currentBlock) {
+        currentBlock.original_text += '\\n' + o;
+        currentBlock.replacement_text += '\\n' + n;
+      } else {
+        currentBlock = {
+          block_id: `html_paragraph_${i}`,
+          original_text: o,
+          replacement_text: n
+        };
+      }
+    } else {
+      if (currentBlock) {
+        blocks.push(currentBlock);
+        currentBlock = null;
+      }
+    }
+  }
+  if (currentBlock) {
+    blocks.push(currentBlock);
+  }
+  
+  if (blocks.length === 0 && oldBlocks.length === 0 && newBlocks.length === 0) {
+    // If it's just raw text without children
+    if (oldHtml.trim() !== newHtml.trim()) {
+      blocks.push({
+        block_id: 'html_note_full',
+        original_text: oldHtml,
+        replacement_text: newHtml
+      });
+    }
+  }
+  
+  if (blocks.length === 0) {
+    alert("No changes detected.");
+    toggleEditMode();
+    return;
+  }
+  
+  try {
+    await apiFetch('/suggestions', {
+      method: 'POST',
+      body: JSON.stringify({
+        course_id: currentCourseId,
+        subject_id: currentSubjectId,
+        pdf_id: null,
+        blocks: blocks
+      })
+    }, true);
+    
+    showSaveStatus('✓ Suggestion Submitted', '#f59e0b', 'rgba(245,158,11,0.12)', 3000);
+    toggleEditMode(); // Reset view
+  } catch (err) {
+    alert('Failed to submit suggestion: ' + err.message);
   }
 }

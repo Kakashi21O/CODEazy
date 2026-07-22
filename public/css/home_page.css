@@ -47,6 +47,8 @@ header{
 
     border-bottom:1px solid rgba(255,255,255,.05);
 
+    z-index: 1000;
+
 }
 
 
@@ -100,6 +102,8 @@ nav a{
     font-weight:400;
 
     transition:.25s;
+
+    position: relative;
 }
 
 nav a:hover{
@@ -107,6 +111,33 @@ nav a:hover{
     color:white;
     transform: scale(1.03)
     
+}
+
+nav a.active-nav-link {
+    color: #00bfff;
+}
+
+nav a.active-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #00bfff;
+    border-radius: 2px;
+    animation: fadeInSlideUp 0.3s ease forwards;
+}
+
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
