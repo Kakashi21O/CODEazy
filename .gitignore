@@ -30,3 +30,6 @@ package-lock.json
 
 # For easyly runing I have add run.bat thats why 
 run.bat
+
+context/
+AGENTS.md
